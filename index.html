@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convite Digital</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(160deg, #ffd6e8, #fff0f6, #ffe6f0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      color: #800040;
+    }
+
+    .convite {
+      width: 100%;
+      max-width: 450px;
+      padding: 25px;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+
+      /* Moldura dourada */
+      border: 4px solid transparent;
+      border-image: linear-gradient(45deg, #d4af37, #f7e98e, #d4af37) 1;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 8px;
+      color: #800040;
+    }
+
+    h2 {
+      font-family: cursive;
+      font-size: 32px;
+      color: #d63384;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 15px;
+      margin: 12px auto;
+      max-width: 380px;
+      line-height: 1.6;
+    }
+
+    .data-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 25px 0;
+      font-weight: 600;
+    }
+
+    .data-box div {
+      padding: 8px 15px;
+      font-size: 14px;
+    }
+
+    .dia {
+      width: 65px;
+      height: 65px;
+      border: 3px solid #d63384;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 10px;
+      color: #800040;
+      background: #fff;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .local {
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .botoes a {
+      text-decoration: none;
+      color: #800040;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      transition: 0.3s;
+    }
+
+    .botoes .icone {
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(145deg, #d63384, #800040);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 6px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .botoes a:hover .icone {
+      transform: scale(1.05);
+      background: linear-gradient(145deg, #800040, #d63384);
+    }
+
+    .nota {
+      margin-top: 18px;
+      font-size: 11px;
+      color: #800040;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="convite">
+    <h1>Chá de Panela</h1>
+    <h2>Da Celma Miguel ✨</h2>
+
+    <p>
+      Neste dia especial, sua presença e conselhos são muito importantes.  
+      O seu carinho será essencial para montar a minha cozinha 💕
+    </p>
+
+    <div class="data-box">
+      <div>SÁBADO<br>16h30</div>
+      <div class="dia">23</div>
+      <div>NOVEMBRO<br>2022</div>
+    </div>
+
+    <div class="local">
+      📍 Catetão - Junto às bombas da Sonangol
+    </div>
+
+    <div class="botoes">
+      <a href="https://amorastudio-listadepresentes.netlify.app/" target="_blank">
+        <div class="icone">🎁</div>
+        Lista de Presentes
+      </a>
+      <a href="https://wa.me/244922713439?text=Ol%C3%A1%20Celma%20💕%20quero%20confirmar%20a%20minha%20presen%C3%A7a%20no%20seu%20Ch%C3%A1%20de%20Panela!" target="_blank">
+        <div class="icone">❤️</div>
+        Confirmar Presença
+      </a>
+      <a href="https://maps.app.goo.gl/kXFWRue9J8FxF8G57?g_st=ip" target="_blank">
+        <div class="icone">📍</div>
+        Endereço
+      </a>
+    </div>
+
+    <p class="nota">Clique nos ícones para interagir ✨</p>
+  </div>
+</body>
+</html>
