@@ -1,14 +1,52 @@
 <!DOCTYPE html>
-<html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Orkap - Só Preços</title>
-<style>body{font-family:Arial;background:#f4f8fc;padding:15px;color:#263442}.login,.panel{max-width:1250px;margin:auto;background:white;padding:20px;border-radius:12px;border:1px solid #e5ebf2}input{padding:8px;border:1px solid #e5ebf2;border-radius:6px;width:100%;box-sizing:border-box}button{background:#527fae;color:white;border:none;padding:10px 16px;border-radius:7px;font-weight:bold;cursor:pointer;margin:2px}button.green{background:#218838}button.sec{background:#eaf2fa;color:#527fae}button.red{background:#c0392b}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:8px;border-bottom:1px solid #e5ebf2;font-size:13px;text-align:left}</style>
-</head><body>
-<div class="login" id="loginBox"><h2>Admin Orkap</h2><input id="email" type="email" placeholder="email" style="margin-bottom:10px"><input id="pass" type="password" placeholder="senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orkap Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#0f172a;min-height:100vh;color:#e2e8f0}
+.login{max-width:400px;margin:100px auto;background:#1e293b;padding:32px;border-radius:20px;border:1px solid #334155}
+.login h2{font-size:28px;font-weight:800;margin-bottom:20px;color:white}
+.login input{width:100%;background:#0f172a;border:1px solid #334155;padding:12px 14px;border-radius:10px;color:white;margin-bottom:12px;outline:none}
+.login button{width:100%;background:#3b82f6;padding:12px;border:none;border-radius:10px;color:white;font-weight:700;cursor:pointer}
+.panel{max-width:1300px;margin:0 auto;padding:24px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.top h1{font-size:28px;font-weight:800;color:white;letter-spacing:-0.5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions input{background:#1e293b;border:1px solid #334155;padding:10px 14px;border-radius:10px;color:white;width:120px;outline:none}
+.actions button{padding:10px 18px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+.btn-blue{background:#3b82f6;color:white}.btn-dark{background:#1e293b;color:#94a3b8;border:1px solid #334155!important}.btn-red{background:#ef444415;color:#ef4444}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;transition:.2s}
+.card:hover{border-color:#3b82f6;transform:translateY(-2px)}
+.info b{color:white;font-size:14px;display:block;margin-bottom:4px}
+.info small{color:#64748b;font-size:11px}
+.prices{display:flex;gap:8px;align-items:center}
+.prices input{width:90px;background:#0f172a;border:1px solid #334155;padding:8px 10px;border-radius:8px;color:white;font-weight:700;outline:none;text-align:center}
+.prices input:focus{border-color:#3b82f6}
+.save{background:#10b981;color:white;border:none;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer}
+.save:active{transform:scale(.95)}
+#msg{color:#ef4444;font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="login" id="loginBox"><h2>Administração da loja Orkap</h2><input id="email" type="email" placeholder="Email"><input id="pass" type="password" placeholder="Senha"><button onclick="login()">Entrar</button><p id="msg"></p></div>
+
 <div class="panel" id="panel" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h2>Painel - Tudo do HTML, só muda preço</h2><button class="red" onclick="logout()">Sair</button></div>
-<div style="margin-top:15px;display:flex;gap:10px"><input id="percent" type="number" placeholder="% Ex: 10" style="max-width:150px"><button onclick="aplicarPercentual()">Aplicar % em TODOS</button><button class="sec" onclick="carregar()">Recarregar preços</button></div>
-<table><thead><tr><th>Produto (do HTML)</th><th>Kz</th><th>€</th><th></th></tr></thead><tbody id="lista"></tbody></table>
-<p style="font-size:11px;color:#718096;margin-top:15px">Nomes vêm do HTML. Aqui só alteras preço.</p>
+<div class="top">
+<h1>Preços • Orkap</h1>
+<div class="actions">
+<input id="percent" type="number" placeholder="%">
+<button class="btn-blue" onclick="aplicarPercentual()">Aplicar %</button>
+<button class="btn-dark" onclick="carregar()">↻ Salvar</button>
+<button class="btn-red" onclick="logout()">Sair</button>
 </div>
+</div>
+<div class="grid" id="lista"></div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig = {
@@ -21,74 +59,70 @@ const firebaseConfig = {
   appId: "1:571248205991:web:65dca626cee2be2f74fb82"
 };
 firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-const auth=firebase.auth();
-function login(){auth.signInWithEmailAndPassword(document.getElementById("email").value,document.getElementById("pass").value).catch(e=>document.getElementById("msg").innerText=e.message)}
+const db=firebase.database();const auth=firebase.auth();
+function login(){auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.message)}
 function logout(){auth.signOut()}
-auth.onAuthStateChanged(user=>{if(user){document.getElementById("loginBox").style.display="none";document.getElementById("panel").style.display="block";carregar();}else{document.getElementById("loginBox").style.display="block";document.getElementById("panel").style.display="none";}});
+auth.onAuthStateChanged(u=>{loginBox.style.display=u?'none':'block';panel.style.display=u?'block':'none';if(u)carregar()})
+
 const demoProducts=[
 {id:"benfica-demo",nome:"Equipamento Benfica",precoKz:52000,precoEUR:40},
 {id:"sporting-demo",nome:"Equipamento Sporting",precoKz:52000,precoEUR:40},
 {id:"rm-demo",nome:"Equipamento Real Madrid",precoKz:52000,precoEUR:40},
 {id:"barca-demo",nome:"Equipamento Barcelona",precoKz:52000,precoEUR:40},
 {id:"porto-demo",nome:"Equipamento FC Porto",precoKz:52000,precoEUR:40},
-{id:"bayern-demo",nome:"Equipamento Bayern",precoKz:52000,precoEUR:40},
-{id:"city-demo",nome:"Equipamento Manchester City",precoKz:52000,precoEUR:40},
-{id:"united-demo",nome:"Equipamento Manchester United",precoKz:52000,precoEUR:40},
-{id:"liverpool-demo",nome:"Equipamento Liverpool",precoKz:52000,precoEUR:40},
-{id:"arsenal-demo",nome:"Equipamento Arsenal",precoKz:52000,precoEUR:40},
-{id:"psg-demo",nome:"Equipamento PSG",precoKz:52000,precoEUR:40},
-{id:"milan-demo",nome:"Equipamento AC Milan",precoKz:52000,precoEUR:40},
-{id:"juventus-demo",nome:"Equipamento Juventus",precoKz:52000,precoEUR:40},
-{id:"inter-demo",nome:"Equipamento Inter",precoKz:52000,precoEUR:40},
-{id:"flamengo-demo",nome:"Equipamento Flamengo",precoKz:52000,precoEUR:40},
-{id:"santos-demo",nome:"Equipamento Santos FC",precoKz:52000,precoEUR:40},
-{id:"palmeiras-demo",nome:"Equipamento Palmeiras",precoKz:52000,precoEUR:40},
-{id:"corinthians-demo",nome:"Equipamento Corinthians",precoKz:52000,precoEUR:40},
-{id:"saopaulo-demo",nome:"Equipamento São Paulo",precoKz:52000,precoEUR:40},
-{id:"fluminense-demo",nome:"Equipamento Fluminense",precoKz:52000,precoEUR:40},
-{id:"botafogo-demo",nome:"Equipamento Botafogo",precoKz:52000,precoEUR:40},
-{id:"vasco-demo",nome:"Equipamento Vasco da Gama",precoKz:52000,precoEUR:40},
-{id:"gremio-demo",nome:"Equipamento Grêmio",precoKz:52000,precoEUR:40},
-{id:"internacional-demo",nome:"Equipamento Internacional",precoKz:52000,precoEUR:40},
+{id:"bayern-demo",nome:"Bayern",precoKz:52000,precoEUR:40},
+{id:"city-demo",nome:"Man City",precoKz:52000,precoEUR:40},
+{id:"united-demo",nome:"Man United",precoKz:52000,precoEUR:40},
+{id:"liverpool-demo",nome:"Liverpool",precoKz:52000,precoEUR:40},
+{id:"arsenal-demo",nome:"Arsenal",precoKz:52000,precoEUR:40},
+{id:"psg-demo",nome:"PSG",precoKz:52000,precoEUR:40},
+{id:"milan-demo",nome:"AC Milan",precoKz:52000,precoEUR:40},
+{id:"juventus-demo",nome:"Juventus",precoKz:52000,precoEUR:40},
+{id:"inter-demo",nome:"Inter",precoKz:52000,precoEUR:40},
+{id:"flamengo-demo",nome:"Flamengo",precoKz:52000,precoEUR:40},
+{id:"santos-demo",nome:"Santos FC",precoKz:52000,precoEUR:40},
+{id:"palmeiras-demo",nome:"Palmeiras",precoKz:52000,precoEUR:40},
+{id:"corinthians-demo",nome:"Corinthians",precoKz:52000,precoEUR:40},
+{id:"saopaulo-demo",nome:"São Paulo",precoKz:52000,precoEUR:40},
+{id:"fluminense-demo",nome:"Fluminense",precoKz:52000,precoEUR:40},
+{id:"botafogo-demo",nome:"Botafogo",precoKz:52000,precoEUR:40},
+{id:"vasco-demo",nome:"Vasco",precoKz:52000,precoEUR:40},
+{id:"gremio-demo",nome:"Grêmio",precoKz:52000,precoEUR:40},
+{id:"internacional-demo",nome:"Internacional",precoKz:52000,precoEUR:40},
 {id:"sauvage-demo",nome:"Dior Sauvage",precoKz:30000,precoEUR:48},
 {id:"rabanne-demo",nome:"Paco Rabanne",precoKz:35000,precoEUR:55},
-{id:"ysl-demo",nome:"Yves Saint Laurent Libre",precoKz:32000,precoEUR:50},
+{id:"ysl-demo",nome:"YSL Libre",precoKz:32000,precoEUR:50},
 {id:"dolce-demo",nome:"Dolce Gabbana",precoKz:30000,precoEUR:48},
-{id:"zara-demo",nome:"Perfume Zara",precoKz:18000,precoEUR:29}
+{id:"zara-demo",nome:"Zara",precoKz:18000,precoEUR:29}
 ];
+
 function carregar(){
-  const tbody=document.getElementById("lista");
-  tbody.innerHTML="<tr><td colspan=4>Carregando preços...</td></tr>";
+  lista.innerHTML="";
   db.ref("produtos").once("value",snap=>{
-    const dados={};
-    snap.forEach(c=>{dados[c.key]=c.val()});
-    tbody.innerHTML="";
+    const dados={};snap.forEach(c=>dados[c.key]=c.val());
     demoProducts.forEach(p=>{
       const fb=dados[p.id]||{};
-      const kz=fb.precoKz!=null?fb.precoKz:p.precoKz;
-      const eur=fb.precoEUR!=null?fb.precoEUR:p.precoEUR;
-      tbody.innerHTML+=`<tr><td><b>${p.nome}</b><br><small style="color:#718096">${p.id}</small></td><td><input id="kz_${p.id}" type="number" value="${kz}"></td><td><input id="eur_${p.id}" type="number" value="${eur}"></td><td><button onclick="salvar('${p.id}')">Salvar preço</button></td></tr>`;
-    });
-  });
+      const kz=fb.precoKz??p.precoKz;const eur=fb.precoEUR??p.precoEUR;
+      lista.innerHTML+=`<div class="card"><div class="info"><b>${p.nome}</b><small>${p.id}</small></div><div class="prices"><input id="kz_${p.id}" value="${kz}" type="number"><input id="eur_${p.id}" value="${eur}" type="number"><button class="save" onclick="salvar('${p.id}')">OK</button></div></div>`;
+    })
+  })
 }
 function salvar(id){
   const precoKz=Number(document.getElementById("kz_"+id).value);
   const precoEUR=Number(document.getElementById("eur_"+id).value);
-  db.ref("produtos/"+id).update({precoKz,precoEUR,ativo:true}).then(()=>alert("Preço salvo!"));
+  db.ref("produtos/"+id).update({precoKz,precoEUR,ativo:true}).then(()=>{
+    const b=document.querySelector(`#kz_${id}`).parentElement.querySelector('.save');
+    b.innerText='✓';b.style.background='#3b82f6';setTimeout(()=>{b.innerText='OK';b.style.background='#10b981'},800)
+  })
 }
 function aplicarPercentual(){
-  const perc=Number(document.getElementById("percent").value);
-  if(!perc)return;if(!confirm(`Aplicar ${perc}% em TODOS?`))return;
+  const perc=Number(percent.value);if(!perc)return;
   demoProducts.forEach(p=>{
-    const kz=Number(document.getElementById("kz_"+p.id).value);
-    const eur=Number(document.getElementById("eur_"+p.id).value);
-    const novoKz=Math.round(kz*(1+perc/100));
-    const novoEur=+(eur*(1+perc/100)).toFixed(2);
-    document.getElementById("kz_"+p.id).value=novoKz;
-    document.getElementById("eur_"+p.id).value=novoEur;
+    const elKz=document.getElementById("kz_"+p.id);const elEur=document.getElementById("eur_"+p.id);
+    const novoKz=Math.round(Number(elKz.value)*(1+perc/100));
+    const novoEur=+(Number(elEur.value)*(1+perc/100)).toFixed(2);
+    elKz.value=novoKz;elEur.value=novoEur;
     db.ref("produtos/"+p.id).update({precoKz:novoKz,precoEUR:novoEur,ativo:true});
-  });
-  alert("Preços atualizados!");
+  })
 }
 </script></body></html>
