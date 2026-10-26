@@ -1229,9 +1229,9 @@ footer {
 
         <div class="header-actions">
             <select id="currency" class="currency-select" aria-label="Selecionar moeda">
-               <option value="EUR">€ EUR</option>
+				 <option value="EUR">€ EUR</option>
 				 <option value="Kz">Kz</option>
-           
+          
             </select>
 
             <button class="cart-button" onclick="openCart()">
@@ -1390,7 +1390,6 @@ footer {
                 onclick="toggleProductList('perfumes')">
             Ver todos os perfumes
         </button>
-
     </div>
 </section>
 
@@ -1414,7 +1413,7 @@ footer {
                 <br>
 
                 <p>
-                    O pagamento é integal 
+                    O pagamento é integal.
                 </p>
 
                 <br>
@@ -1482,7 +1481,7 @@ footer {
 </main>
 
 <footer>
-    <strong>Orkap Novo Conceito De Shopping</strong><br>
+    <strong>Orkap - Novo Conceito De Shopping</strong><br>
     A tua loja online de equipamentos e perfumes.<br>
     Todos os produtos estão sujeitos a confirmação de disponibilidade.
 </footer>
@@ -1567,32 +1566,63 @@ footer {
     <img data-imagem="apresentacao" src="orkap.jpg" alt="">
 
     <img data-produto="rm-demo" src="re.jpg" alt="">
+    <img data-produto="benfica-demo" src="ben.jpg" alt="">
     <img data-produto="barca-demo" src="bar.jpg" alt="">
-    <img data-produto="bayern-demo" src="bay.jpg" alt="">
-    <img data-produto="city-demo" src="ci.jpg" alt="">
+    <img data-produto="sporting-demo" src="spor.jpg" alt="">
     <img data-produto="united-demo" src="un.jpg" alt="">
     <img data-produto="liverpool-demo" src="li.jpg" alt="">
     <img data-produto="arsenal-demo" src="ar.jpg" alt="">
     <img data-produto="psg-demo" src="psg.jpg" alt="">
 
-    <img data-produto="dior-demo"
-         src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=700&q=80"
+ <img data-produto="bayern-demo" src="bay.jpg" alt="">
+    <img data-produto="city-demo" src="city.jpg" alt="">
+   
+
+
+
+
+  <img data-produto="porto-demo" src="por.jpg" alt="">
+    <img data-produto="milan-demo" src="mil.jpg" alt="">
+    <img data-produto="juventus-demo" src="juve.jpg" alt="">
+    <img data-produto="inter-demo" src="inter.jpg" alt="">
+    <img data-produto="botafogo-demo" src="bota.jpg" alt="">
+    <img data-produto="fluminense-demo" src="flu.jpg" alt="">
+    <img data-produto="flamengo-demo" src="flame.jpg" alt="">
+    <img data-produto="santos-demo" src="santos.jpg" alt="">
+
+ <img data-produto="palmeiras-demo" src="palme.jpg" alt="">
+    <img data-produto="milan-demo" src="mil.jpg" alt="">
+    <img data-produto="corinthians-demo" src="cori.jpg" alt="">
+    <img data-produto="saopaulo-demo" src="saopaulo.jpg" alt="">
+    <img data-produto="gremio-demo" src="gremio.jpg" alt="">
+    <img data-produto="vasco-demo" src="vasco.jpg" alt="">
+    <img data-produto="internacional-demo" src="internacional.jpg" alt="">
+  
+
+
+
+
+
+
+
+    <img data-produto="rabanne-demo"
+         src="paco.jpg"
          alt="">
 
-    <img data-produto="chanel-demo"
-         src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=700&q=80"
+    <img data-produto="sauvage-demo"
+         src="Sau.jpg"
          alt="">
 
     <img data-produto="ysl-demo"
-         src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=700&q=80"
+         src="ysl.jpg"
          alt="">
 
-    <img data-produto="armani-demo"
-         src="https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=700&q=80"
+    <img data-produto="dolce-demo"
+         src="dolce-gabbana"
          alt="">
 
     <img data-produto="zara-demo"
-         src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=700&q=80"
+         src="zara.jpg"
          alt="">
 
 </div>
@@ -1698,6 +1728,50 @@ const demoProducts = [
         categoria: "Equipamentos",
         marca: "Barcelona",
         pais: "Espanha",
+        descricao: "Modelos e tamanhos disponíveis.",
+        precoKz: 52000,
+        precoEUR: 40,
+        ativo: true,
+        destaque: false,
+        epoca: "Por encomenda"
+    },
+
+/* PORTUGAL */
+
+    {
+        id: "benfica-demo",
+        nome: "Equipamento Benfica",
+        categoria: "Equipamentos",
+        marca: "Benfica",
+        pais: "Portugal",
+        descricao: "Modelos e tamanhos disponíveis.",
+        precoKz: 52000,
+        precoEUR: 40,
+        ativo: true,
+        destaque: false,
+        epoca: "Por encomenda"
+    },
+	
+	{
+        id: "sporting-demo",
+        nome: "Equipamento Sporting",
+        categoria: "Equipamentos",
+        marca: "Sporting",
+        pais: "Portugal",
+        descricao: "Modelos e tamanhos disponíveis.",
+        precoKz: 52000,
+        precoEUR: 40,
+        ativo: true,
+        destaque: false,
+        epoca: "Por encomenda"
+    },
+
+{
+        id: "porto-demo",
+        nome: "Equipamento FC Porto",
+        categoria: "Equipamentos",
+        marca: "FC Porto",
+        pais: "Portugal",
         descricao: "Modelos e tamanhos disponíveis.",
         precoKz: 52000,
         precoEUR: 40,
@@ -1840,49 +1914,8 @@ const demoProducts = [
         epoca: "Por encomenda"
     },
 
-    /* PORTUGAL */
+    
 
-    {
-        id: "benfica-demo",
-        nome: "Equipamento Benfica",
-        categoria: "Equipamentos",
-        marca: "Benfica",
-        pais: "Portugal",
-        descricao: "Modelos e tamanhos disponíveis.",
-        precoKz: 52000,
-        precoEUR: 40,
-        ativo: true,
-        destaque: false,
-        epoca: "Por encomenda"
-    },
-
-    {
-        id: "porto-demo",
-        nome: "Equipamento FC Porto",
-        categoria: "Equipamentos",
-        marca: "FC Porto",
-        pais: "Portugal",
-        descricao: "Modelos e tamanhos disponíveis.",
-        precoKz: 52000,
-        precoEUR: 40,
-        ativo: true,
-        destaque: false,
-        epoca: "Por encomenda"
-    },
-
-    {
-        id: "sporting-demo",
-        nome: "Equipamento Sporting",
-        categoria: "Equipamentos",
-        marca: "Sporting",
-        pais: "Portugal",
-        descricao: "Modelos e tamanhos disponíveis.",
-        precoKz: 52000,
-        precoEUR: 40,
-        ativo: true,
-        destaque: false,
-        epoca: "Por encomenda"
-    },
 
     /* BRASIL */
 
@@ -1970,19 +2003,7 @@ const demoProducts = [
         epoca: "Por encomenda"
     },
 
-    {
-        id: "gremio-demo",
-        nome: "Equipamento Grêmio",
-        categoria: "Equipamentos",
-        marca: "Grêmio",
-        pais: "Brasil",
-        descricao: "Modelos e tamanhos disponíveis.",
-        precoKz: 52000,
-        precoEUR: 40,
-        ativo: true,
-        destaque: false,
-        epoca: "Por encomenda"
-    },
+    
 
     {
         id: "internacional-demo",
@@ -2029,7 +2050,7 @@ const demoProducts = [
     /* PERFUMES */
 
     {
-        id: "dior-demo",
+        id: "sauvage-demo",
         nome: "Dior Sauvage",
         categoria: "Perfumes",
         marca: "Dior",
@@ -2041,10 +2062,10 @@ const demoProducts = [
     },
 
     {
-        id: "chanel-demo",
-        nome: "Chanel Coco Mademoiselle",
+        id: "rabanne-demo",
+        nome: "Paco Rabanne",
         categoria: "Perfumes",
-        marca: "Chanel",
+        marca: "Paco Rabanne",
         descricao: "Confirma a versão e a capacidade pretendidas.",
         precoKz: 35000,
         precoEUR: 55,
@@ -2065,10 +2086,10 @@ const demoProducts = [
     },
 
     {
-        id: "armani-demo",
-        nome: "Acqua di Giò",
+        id: "dolce-demo",
+        nome: "Dolce Gabbana",
         categoria: "Perfumes",
-        marca: "Giorgio Armani",
+        marca: "Dolce Gabbana",
         descricao: "Confirma a versão e a capacidade pretendidas.",
         precoKz: 30000,
         precoEUR: 48,
@@ -2161,8 +2182,9 @@ const clubsByCountry = {
 
 /* PREÇOS DE REFERÊNCIA DOS EQUIPAMENTOS */
 
-const equipmentBaseKz = 52000;
+
 const equipmentBaseEUR = 40;
+const equipmentBaseKz = 52000;
 
 /* FORMATAÇÃO DE PREÇOS */
 
@@ -2419,7 +2441,7 @@ function updateCustomPrice() {
         ? "Equipamento normal"
         : type === "treino"
             ? "Equipamento de treino"
-            : "Camisola personalizada (+20%)";
+            : "Camisola personalizada (+25%)";
 
     document.getElementById("customPrice").textContent =
         label + " — " +
