@@ -2,17 +2,17 @@
 <html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Orkap - Só Preços</title>
 <style>body{font-family:Arial;background:#f4f8fc;padding:15px;color:#263442}.login,.panel{max-width:1250px;margin:auto;background:white;padding:20px;border-radius:12px;border:1px solid #e5ebf2}input{padding:8px;border:1px solid #e5ebf2;border-radius:6px;width:100%;box-sizing:border-box}button{background:#527fae;color:white;border:none;padding:10px 16px;border-radius:7px;font-weight:bold;cursor:pointer;margin:2px}button.green{background:#218838}button.sec{background:#eaf2fa;color:#527fae}button.red{background:#c0392b}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:8px;border-bottom:1px solid #e5ebf2;font-size:13px;text-align:left}</style>
 </head><body>
-<div class="login" id="loginBox"><h2>Administração da loja Orkap</h2><input id="email" type="email" placeholder="email" style="margin-bottom:10px"><input id="pass" type="password" placeholder="senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
+<div class="login" id="loginBox"><h2>Admin Orkap</h2><input id="email" type="email" placeholder="email" style="margin-bottom:10px"><input id="pass" type="password" placeholder="senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
 <div class="panel" id="panel" style="display:none">
 <div style="display:flex;justify-content:space-between;align-items:center"><h2>Painel - Tudo do HTML, só muda preço</h2><button class="red" onclick="logout()">Sair</button></div>
 <div style="margin-top:15px;display:flex;gap:10px"><input id="percent" type="number" placeholder="% Ex: 10" style="max-width:150px"><button onclick="aplicarPercentual()">Aplicar % em TODOS</button><button class="sec" onclick="carregar()">Recarregar preços</button></div>
 <table><thead><tr><th>Produto (do HTML)</th><th>Kz</th><th>€</th><th></th></tr></thead><tbody id="lista"></tbody></table>
-<p style="font-size:11px;color:#718096;margin-top:15px">Nomes vêm do HTML. Aqui só alteras preço. Ordem já está fixa: Benfica 1º, Sporting 2º...</p>
+<p style="font-size:11px;color:#718096;margin-top:15px">Nomes vêm do HTML. Aqui só alteras preço.</p>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFX7b7oumRQ",
+  apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",
   authDomain: "orkap-d13c6.firebaseapp.com",
   databaseURL: "https://orkap-d13c6-default-rtdb.firebaseio.com",
   projectId: "orkap-d13c6",
@@ -26,8 +26,6 @@ const auth=firebase.auth();
 function login(){auth.signInWithEmailAndPassword(document.getElementById("email").value,document.getElementById("pass").value).catch(e=>document.getElementById("msg").innerText=e.message)}
 function logout(){auth.signOut()}
 auth.onAuthStateChanged(user=>{if(user){document.getElementById("loginBox").style.display="none";document.getElementById("panel").style.display="block";carregar();}else{document.getElementById("loginBox").style.display="block";document.getElementById("panel").style.display="none";}});
-
-// LISTA FIXA - TUDO DO HTML, NA ORDEM QUE QUERES
 const demoProducts=[
 {id:"benfica-demo",nome:"Equipamento Benfica",precoKz:52000,precoEUR:40},
 {id:"sporting-demo",nome:"Equipamento Sporting",precoKz:52000,precoEUR:40},
@@ -59,7 +57,6 @@ const demoProducts=[
 {id:"dolce-demo",nome:"Dolce Gabbana",precoKz:30000,precoEUR:48},
 {id:"zara-demo",nome:"Perfume Zara",precoKz:18000,precoEUR:29}
 ];
-
 function carregar(){
   const tbody=document.getElementById("lista");
   tbody.innerHTML="<tr><td colspan=4>Carregando preços...</td></tr>";
@@ -78,11 +75,11 @@ function carregar(){
 function salvar(id){
   const precoKz=Number(document.getElementById("kz_"+id).value);
   const precoEUR=Number(document.getElementById("eur_"+id).value);
-  db.ref("produtos/"+id).update({precoKz,precoEUR,ativo:true}).then(()=>alert("Preço salvo! Nome continua do HTML."));
+  db.ref("produtos/"+id).update({precoKz,precoEUR,ativo:true}).then(()=>alert("Preço salvo!"));
 }
 function aplicarPercentual(){
   const perc=Number(document.getElementById("percent").value);
-  if(!perc)return;if(!confirm(`Aplicar ${perc}% em TODOS os preços?`))return;
+  if(!perc)return;if(!confirm(`Aplicar ${perc}% em TODOS?`))return;
   demoProducts.forEach(p=>{
     const kz=Number(document.getElementById("kz_"+p.id).value);
     const eur=Number(document.getElementById("eur_"+p.id).value);
