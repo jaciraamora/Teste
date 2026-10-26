@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Orkap - Final</title>
-<style>body{font-family:Arial;background:#f4f8fc;padding:15px;color:#263442}.login,.panel{max-width:1200px;margin:auto;background:white;padding:20px;border-radius:12px;border:1px solid #e5ebf2}input{padding:8px;border:1px solid #e5ebf2;border-radius:6px;width:100%;box-sizing:border-box}button{background:#527fae;color:white;border:none;padding:10px 16px;border-radius:7px;font-weight:bold;cursor:pointer;margin:2px}button.green{background:#218838}button.black{background:#111}button.sec{background:#eaf2fa;color:#527fae}button.red{background:#c0392b}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:8px;border-bottom:1px solid #e5ebf2;font-size:13px;text-align:left}</style>
+<html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Orkap - Só Preços</title>
+<style>body{font-family:Arial;background:#f4f8fc;padding:15px;color:#263442}.login,.panel{max-width:1250px;margin:auto;background:white;padding:20px;border-radius:12px;border:1px solid #e5ebf2}input{padding:8px;border:1px solid #e5ebf2;border-radius:6px;width:100%;box-sizing:border-box}button{background:#527fae;color:white;border:none;padding:10px 16px;border-radius:7px;font-weight:bold;cursor:pointer;margin:2px}button.green{background:#218838}button.sec{background:#eaf2fa;color:#527fae}button.red{background:#c0392b}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:8px;border-bottom:1px solid #e5ebf2;font-size:13px;text-align:left}</style>
 </head><body>
-<div class="login" id="loginBox"><h2>Admin Orkap</h2><input id="email" type="email" placeholder="teu email do Firebase" style="margin-bottom:10px"><input id="pass" type="password" placeholder="senha 6 dígitos"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
+<div class="login" id="loginBox"><h2>Administração da loja Orkap</h2><input id="email" type="email" placeholder="email" style="margin-bottom:10px"><input id="pass" type="password" placeholder="senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
 <div class="panel" id="panel" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h2>Painel - Ordem e Preços</h2><button class="red" onclick="logout()">Sair</button></div>
-<button class="green" onclick="importarDemo()">DEFINIR ORDEM: Benfica, Sporting, Real, Barça primeiro</button>
-<button class="black" onclick="adicionarProduto()">+ Novo Produto</button>
-<div style="margin-top:15px;display:flex;gap:10px"><input id="percent" type="number" placeholder="% Ex: 10" style="max-width:150px"><button onclick="aplicarPercentual()">Aplicar % em TODOS</button><button class="sec" onclick="carregar()">Recarregar</button></div>
-<table><thead><tr><th>Ordem</th><th>Produto</th><th>Kz</th><th>€</th><th></th></tr></thead><tbody id="lista"></tbody></table>
+<div style="display:flex;justify-content:space-between;align-items:center"><h2>Painel - Tudo do HTML, só muda preço</h2><button class="red" onclick="logout()">Sair</button></div>
+<div style="margin-top:15px;display:flex;gap:10px"><input id="percent" type="number" placeholder="% Ex: 10" style="max-width:150px"><button onclick="aplicarPercentual()">Aplicar % em TODOS</button><button class="sec" onclick="carregar()">Recarregar preços</button></div>
+<table><thead><tr><th>Produto (do HTML)</th><th>Kz</th><th>€</th><th></th></tr></thead><tbody id="lista"></tbody></table>
+<p style="font-size:11px;color:#718096;margin-top:15px">Nomes vêm do HTML. Aqui só alteras preço. Ordem já está fixa: Benfica 1º, Sporting 2º...</p>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",
+  apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFX7b7oumRQ",
   authDomain: "orkap-d13c6.firebaseapp.com",
   databaseURL: "https://orkap-d13c6-default-rtdb.firebaseio.com",
   projectId: "orkap-d13c6",
@@ -24,47 +23,75 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 const auth=firebase.auth();
-
 function login(){auth.signInWithEmailAndPassword(document.getElementById("email").value,document.getElementById("pass").value).catch(e=>document.getElementById("msg").innerText=e.message)}
 function logout(){auth.signOut()}
 auth.onAuthStateChanged(user=>{if(user){document.getElementById("loginBox").style.display="none";document.getElementById("panel").style.display="block";carregar();}else{document.getElementById("loginBox").style.display="block";document.getElementById("panel").style.display="none";}});
 
-const ORDEM_FIXA={"benfica":1,"sporting":2,"real-madrid":3,"barcelona":4,"porto":5,"man-city":6,"man-united":7,"arsenal":8,"liverpool":9,"chelsea":10,"bayern":11,"psg":12,"juventus":13,"flamengo":14,"palmeiras":15,"corinthians":16,"al-nassr":17,"inter-miami":18};
-
+// LISTA FIXA - TUDO DO HTML, NA ORDEM QUE QUERES
 const demoProducts=[
-{id:"benfica",nome:"Equipamento Benfica"},{id:"sporting",nome:"Equipamento Sporting"},{id:"real-madrid",nome:"Equipamento Real Madrid"},{id:"barcelona",nome:"Equipamento Barcelona"},{id:"porto",nome:"Equipamento FC Porto"},{id:"man-city",nome:"Man City"},{id:"man-united",nome:"Man United"},{id:"arsenal",nome:"Arsenal"},{id:"liverpool",nome:"Liverpool"},{id:"chelsea",nome:"Chelsea"},{id:"bayern",nome:"Bayern"},{id:"psg",nome:"PSG"},{id:"flamengo",nome:"Flamengo"}
+{id:"benfica-demo",nome:"Equipamento Benfica",precoKz:52000,precoEUR:40},
+{id:"sporting-demo",nome:"Equipamento Sporting",precoKz:52000,precoEUR:40},
+{id:"rm-demo",nome:"Equipamento Real Madrid",precoKz:52000,precoEUR:40},
+{id:"barca-demo",nome:"Equipamento Barcelona",precoKz:52000,precoEUR:40},
+{id:"porto-demo",nome:"Equipamento FC Porto",precoKz:52000,precoEUR:40},
+{id:"bayern-demo",nome:"Equipamento Bayern",precoKz:52000,precoEUR:40},
+{id:"city-demo",nome:"Equipamento Manchester City",precoKz:52000,precoEUR:40},
+{id:"united-demo",nome:"Equipamento Manchester United",precoKz:52000,precoEUR:40},
+{id:"liverpool-demo",nome:"Equipamento Liverpool",precoKz:52000,precoEUR:40},
+{id:"arsenal-demo",nome:"Equipamento Arsenal",precoKz:52000,precoEUR:40},
+{id:"psg-demo",nome:"Equipamento PSG",precoKz:52000,precoEUR:40},
+{id:"milan-demo",nome:"Equipamento AC Milan",precoKz:52000,precoEUR:40},
+{id:"juventus-demo",nome:"Equipamento Juventus",precoKz:52000,precoEUR:40},
+{id:"inter-demo",nome:"Equipamento Inter",precoKz:52000,precoEUR:40},
+{id:"flamengo-demo",nome:"Equipamento Flamengo",precoKz:52000,precoEUR:40},
+{id:"santos-demo",nome:"Equipamento Santos FC",precoKz:52000,precoEUR:40},
+{id:"palmeiras-demo",nome:"Equipamento Palmeiras",precoKz:52000,precoEUR:40},
+{id:"corinthians-demo",nome:"Equipamento Corinthians",precoKz:52000,precoEUR:40},
+{id:"saopaulo-demo",nome:"Equipamento São Paulo",precoKz:52000,precoEUR:40},
+{id:"fluminense-demo",nome:"Equipamento Fluminense",precoKz:52000,precoEUR:40},
+{id:"botafogo-demo",nome:"Equipamento Botafogo",precoKz:52000,precoEUR:40},
+{id:"vasco-demo",nome:"Equipamento Vasco da Gama",precoKz:52000,precoEUR:40},
+{id:"gremio-demo",nome:"Equipamento Grêmio",precoKz:52000,precoEUR:40},
+{id:"internacional-demo",nome:"Equipamento Internacional",precoKz:52000,precoEUR:40},
+{id:"sauvage-demo",nome:"Dior Sauvage",precoKz:30000,precoEUR:48},
+{id:"rabanne-demo",nome:"Paco Rabanne",precoKz:35000,precoEUR:55},
+{id:"ysl-demo",nome:"Yves Saint Laurent Libre",precoKz:32000,precoEUR:50},
+{id:"dolce-demo",nome:"Dolce Gabbana",precoKz:30000,precoEUR:48},
+{id:"zara-demo",nome:"Perfume Zara",precoKz:18000,precoEUR:29}
 ];
 
 function carregar(){
+  const tbody=document.getElementById("lista");
+  tbody.innerHTML="<tr><td colspan=4>Carregando preços...</td></tr>";
   db.ref("produtos").once("value",snap=>{
-    const tbody=document.getElementById("lista");
+    const dados={};
+    snap.forEach(c=>{dados[c.key]=c.val()});
     tbody.innerHTML="";
-    let lista=[];
-    snap.forEach(c=>{lista.push({id:c.key, ...c.val()})});
-    lista.sort((a,b)=>(a.ordem||999)-(b.ordem||999));
-    lista.forEach(p=>{
-      tbody.innerHTML+=`<tr><td><input id="ordem_${p.id}" type="number" value="${p.ordem||99}" style="width:60px"></td><td><b>${p.nome}</b></td><td><input id="kz_${p.id}" type="number" value="${p.precoKz||0}"></td><td><input id="eur_${p.id}" type="number" value="${p.precoEUR||0}"></td><td><button onclick="salvar('${p.id}')">Salvar</button></td></tr>`;
+    demoProducts.forEach(p=>{
+      const fb=dados[p.id]||{};
+      const kz=fb.precoKz!=null?fb.precoKz:p.precoKz;
+      const eur=fb.precoEUR!=null?fb.precoEUR:p.precoEUR;
+      tbody.innerHTML+=`<tr><td><b>${p.nome}</b><br><small style="color:#718096">${p.id}</small></td><td><input id="kz_${p.id}" type="number" value="${kz}"></td><td><input id="eur_${p.id}" type="number" value="${eur}"></td><td><button onclick="salvar('${p.id}')">Salvar preço</button></td></tr>`;
     });
   });
 }
 function salvar(id){
-  const ordem=Number(document.getElementById("ordem_"+id).value);
   const precoKz=Number(document.getElementById("kz_"+id).value);
   const precoEUR=Number(document.getElementById("eur_"+id).value);
-  db.ref("produtos/"+id).update({ordem,precoKz,precoEUR}).then(()=>alert("Salvo!"));
+  db.ref("produtos/"+id).update({precoKz,precoEUR,ativo:true}).then(()=>alert("Preço salvo! Nome continua do HTML."));
 }
-function importarDemo(){
-  if(!confirm("Definir ordem: Benfica 1, Sporting 2, Real 3, Barça 4 e os restantes depois? (NÃO apaga fotos)"))return;
-  db.ref("produtos").once("value",snap=>{
-    snap.forEach(child=>{
-      const id=child.key;
-      const ordem=ORDEM_FIXA[id]||99;
-      db.ref("produtos/"+id).update({ordem});
-    });
-    alert("Ordem aplicada!");
-    setTimeout(carregar,1000);
+function aplicarPercentual(){
+  const perc=Number(document.getElementById("percent").value);
+  if(!perc)return;if(!confirm(`Aplicar ${perc}% em TODOS os preços?`))return;
+  demoProducts.forEach(p=>{
+    const kz=Number(document.getElementById("kz_"+p.id).value);
+    const eur=Number(document.getElementById("eur_"+p.id).value);
+    const novoKz=Math.round(kz*(1+perc/100));
+    const novoEur=+(eur*(1+perc/100)).toFixed(2);
+    document.getElementById("kz_"+p.id).value=novoKz;
+    document.getElementById("eur_"+p.id).value=novoEur;
+    db.ref("produtos/"+p.id).update({precoKz:novoKz,precoEUR:novoEur,ativo:true});
   });
+  alert("Preços atualizados!");
 }
-function adicionarProduto(){const nome=prompt("Nome:");if(!nome)return;const id=nome.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now();const precoKz=Number(prompt("Kz:"));const precoEUR=Number(prompt("€:"));const ordem=Number(prompt("Ordem (1=primeiro):")||99);db.ref("produtos/"+id).set({id,nome,categoria:"Equipamentos",precoKz,precoEUR,ordem,ativo:true}).then(()=>carregar());}
-function aplicarPercentual(){const perc=Number(document.getElementById("percent").value);if(!perc)return;if(!confirm(`Aplicar ${perc}% em todos?`))return;db.ref("produtos").once("value",snap=>{snap.forEach(child=>{const p=child.val();db.ref("produtos/"+child.key).update({precoKz:Math.round((p.precoKz||0)*(1+perc/100)),precoEUR:+((p.precoEUR||0)*(1+perc/100)).toFixed(2)});});setTimeout(carregar,1000);});}
 </script></body></html>
