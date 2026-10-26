@@ -1627,6 +1627,7 @@ footer {
 
 </div>
 
+
 <!-- FIREBASE -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -2109,6 +2110,9 @@ const demoProducts = [
         ativo: true
     }
 ];
+
+// depois de pegar do Firebase
+produtos.sort((a,b) => (a.ordem || 99) - (b.ordem || 99));
 
 /* ESTADO DA LOJA */
 
