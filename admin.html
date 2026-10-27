@@ -1,474 +1,114 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Orkap - Só Preços</title>
-
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Orkap Pro</title>
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box}body{font-family:Inter,Arial;background:#f6f8fb;margin:0;color:#1a2b40}
+.top{max-width:600px;margin:0 auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;color:#2f6eae} .logo small{display:block;font-weight:400;color:#8aa0b8;font-size:10px}
+.box{max-width:600px;margin:0 auto 20px;background:#fff;border-radius:18px;box-shadow:0 8px 30px rgba(20,40,70,.06);border:1px solid #e9eef5;overflow:hidden}
+.tabs{display:flex;gap:6px;padding:10px;background:#f8fafd;border-bottom:1px solid #eef2f7}
+.tab{flex:1;padding:11px;border-radius:10px;border:1px solid #d9e3f0;background:#fff;font-weight:700;font-size:11px;color:#4a6a8a;cursor:pointer}
+.tab.active{background:#2f6eae;color:#fff;border-color:#2f6eae}
+.search{padding:10px} .search input{width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0}
+.list{padding:0 10px 14px;display:grid;gap:10px}
+.card{border:1px solid #eaf0f8;border-radius:14px;padding:12px;background:#fff;display:grid;grid-template-columns:1fr 88px 78px 68px;gap:8px;align-items:end}
+.card b{grid-column:1/-1;font-size:13px} .card small{color:#8aa0b8;font-weight:400}
+.card label{font-size:9px;color:#8aa0b8;font-weight:700;text-transform:uppercase;display:block;margin-bottom:3px}
+.card input{padding:9px;border-radius:8px;border:1px solid #d9e3f0;width:100%}
+.pers{grid-column:1/-1;background:#f4f8ff;border:1px dashed #c9d9f0;border-radius:8px;padding:7px 10px;font-size:11px;color:#2f6eae;display:flex;justify-content:space-between}
+.btn{padding:9px;border-radius:8px;border:none;background:#2f6eae;color:#fff;font-weight:800;cursor:pointer}
+.btn-ghost{background:#eef4ff;color:#2f6eae}
+.cfg{padding:12px;display:grid;gap:12px}
+.cfg-card{border:1px solid #eaf0f8;border-radius:12px;padding:14px;background:#fbfdff}
+.cfg-card h4{margin:0 0 8px;font-size:12px;color:#2f6eae}
+.hidden{display:none}
+@media(max-width:600px){.card{grid-template-columns:1fr 1fr} .card b{grid-column:1/-1}}
+</style></head><body>
+<div class="top"><div class="logo">ADMINISTRAÇÃO DA LOJA ORKAP<small></small></div><button id="btnOut" class="btn btn-ghost hidden" onclick="logout()">Sair</button></div>
+<div class="box" id="loginBox" style="padding:30px 18px"><h3>Entrar</h3><input id="email" placeholder="Email" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px"><input id="pass" type="password" placeholder="Senha" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px"><button class="btn" style="width:100%" onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
 
-body{
-    font-family:Arial,sans-serif;
-    background:#eef3f8;
-    padding:12px;
-    margin:0;
-    color:#243247;
-}
-
-.box{
-    max-width:900px;
-    margin:12px auto;
-    background:#fff;
-    padding:18px;
-    border-radius:14px;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
-}
-
-h2{
-    font-size:20px;
-    margin:0 0 6px;
-}
-
-.subtitulo{
-    color:#718096;
-    font-size:13px;
-    margin:0 0 16px;
-}
-
-input{
-    padding:10px;
-    border:1px solid #d1d9e6;
-    border-radius:8px;
-    width:100%;
-    font-size:14px;
-    min-width:0;
-}
-
-button{
-    padding:10px 12px;
-    background:#2f6eae;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-    width:100%;
-}
-
-button:disabled{
-    opacity:.6;
-    cursor:wait;
-}
-
-.item{
-    border:1px solid #e2e8f0;
-    padding:12px;
-    border-radius:10px;
-    margin-top:8px;
-    display:grid;
-    grid-template-columns:minmax(0,1.5fr) 1fr 1fr 90px;
-    gap:8px;
-    align-items:end;
-    background:#fafcff;
-}
-
-.item b{
-    grid-column:1/-1;
-    font-size:14px;
-}
-
-.item small{
-    display:block;
-    color:#8994a4;
-    font-size:10px;
-    font-weight:normal;
-    margin-top:3px;
-}
-
-label{
-    font-size:11px;
-    color:#718096;
-    font-weight:bold;
-    display:block;
-    margin-bottom:4px;
-}
-
-.secao-titulo{
-    font-size:15px;
-    margin:20px 0 8px;
-    padding-bottom:8px;
-    border-bottom:1px solid #e8edf3;
-}
-
-.preco-base{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin:12px 0;
-}
-
-.estado{
-    font-size:12px;
-    margin-top:8px;
-    color:#2f6eae;
-}
-
-#msg{
-    color:#c0392b;
-    font-size:12px;
-    overflow-wrap:anywhere;
-}
-
-@media(max-width:600px){
-    .box{padding:14px}
-    .item{
-        grid-template-columns:1fr 1fr;
-        gap:9px;
-        padding:10px;
-    }
-    .item b{grid-column:1/-1}
-    .item button{height:38px}
-}
-</style>
-</head>
-
-<body>
-
-<div class="box" id="loginBox">
-    <h2>Orkap</h2>
-    <p class="subtitulo">Painel de administração</p>
-
-    <label for="email">Email</label>
-    <input id="email" type="email" placeholder="Email de administração"
-           autocomplete="username">
-
-    <br><br>
-
-    <label for="pass">Senha</label>
-    <input id="pass" type="password" placeholder="Senha"
-           autocomplete="current-password">
-
-    <br><br>
-
-    <button id="loginBtn" onclick="login()">Entrar</button>
-    <p id="msg"></p>
+<div class="box hidden" id="panel">
+<div class="tabs"><button class="tab active" id="tEquip" onclick="setTab('equip')">EQUIPAMENTOS</button><button class="tab" id="tPerf" onclick="setTab('perf')">PERFUMES</button><button class="tab" id="tCfg" onclick="setTab('cfg')">CONFIG %</button></div>
+<div class="search" id="sBox"><input id="q" placeholder="Pesquisar..." oninput="render()"></div>
+<div class="list" id="lista"></div>
+<div id="cfgArea" class="hidden cfg">
+<div class="cfg-card"><h4>Percentagem Personalizada</h4><label>% EXTRA (ex: 25 = +25%)</label><input id="cfgPerc" type="number" min="0" max="100" oninput="onPercChange()"><div id="cfgEx" style="font-size:11px;margin-top:8px;color:#2f6eae;background:#eef4ff;padding:8px;border-radius:8px"></div><button class="btn" style="margin-top:10px;width:100%" onclick="saveCfg()">Salvar Percentagem</button><p style="font-size:11px;color:#8aa0b8;margin-top:8px">Ex: Se Benfica custa 52.000 Kz e % = 25, a personalizada fica 65.000 Kz automaticamente.</p></div>
+</div>
 </div>
 
-<div class="box" id="panel" style="display:none">
-
-    <h2>Gestão de preços</h2>
-    <p class="subtitulo">Altera os preços sem modificar o catálogo.</p>
-
-    <button onclick="logout()" style="background:#c0392b;width:auto">
-        Sair
-    </button>
-
-    <h3 class="secao-titulo">Preço base dos equipamentos</h3>
-
-    <div class="preco-base">
-        <div>
-            <label for="baseKz">Preço em Kz</label>
-            <input id="baseKz" type="number" min="0" step="1" value="25000">
-        </div>
-
-        <div>
-            <label for="baseEur">Preço em euros (€)</label>
-            <input id="baseEur" type="number" min="0" step="0.01" value="40">
-        </div>
-    </div>
-
-    <button id="baseBtn" onclick="salvarPrecoBase()">
-        Guardar preço base
-    </button>
-
-    <p id="baseEstado" class="estado"></p>
-
-    <h3 class="secao-titulo">Preços individuais</h3>
-
-    <div id="lista">A carregar preços...</div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",
-    authDomain: "orkap-d13c6.firebaseapp.com",
-    databaseURL: "https://orkap-d13c6-default-rtdb.firebaseio.com",
-    projectId: "orkap-d13c6",
-    storageBucket: "orkap-d13c6.firebasestorage.app",
-    messagingSenderId: "571248205991",
-    appId: "1:571248205991:web:65dca626cee2be2f74fb82"
-};
+const firebaseConfig={apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",authDomain:"orkap-d13c6.firebaseapp.com",databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",projectId:"orkap-d13c6",storageBucket:"orkap-d13c6.firebasestorage.app",messagingSenderId:"571248205991",appId:"1:571248205991:web:65dca626cee2be2f74fb82"};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.database();
-const auth = firebase.auth();
-
-const demoProducts = [
-    {id:"rm-demo",nome:"Equipamento Real Madrid",defKz:52000,defEur:40},
-    {id:"barca-demo",nome:"Equipamento Barcelona",defKz:52000,defEur:40},
-    {id:"benfica-demo",nome:"Equipamento Benfica",defKz:52000,defEur:40},
-    {id:"sporting-demo",nome:"Equipamento Sporting",defKz:52000,defEur:40},
-    {id:"porto-demo",nome:"Equipamento FC Porto",defKz:52000,defEur:40},
-    {id:"bayern-demo",nome:"Equipamento Bayern",defKz:52000,defEur:40},
-    {id:"city-demo",nome:"Equipamento Manchester City",defKz:52000,defEur:40},
-    {id:"united-demo",nome:"Equipamento Manchester United",defKz:52000,defEur:40},
-    {id:"liverpool-demo",nome:"Equipamento Liverpool",defKz:52000,defEur:40},
-    {id:"arsenal-demo",nome:"Equipamento Arsenal",defKz:52000,defEur:40},
-    {id:"psg-demo",nome:"Equipamento PSG",defKz:52000,defEur:40},
-    {id:"milan-demo",nome:"Equipamento AC Milan",defKz:52000,defEur:40},
-    {id:"juventus-demo",nome:"Equipamento Juventus",defKz:52000,defEur:40},
-    {id:"inter-demo",nome:"Equipamento Inter",defKz:52000,defEur:40},
-    {id:"flamengo-demo",nome:"Equipamento Flamengo",defKz:52000,defEur:40},
-    {id:"santos-demo",nome:"Equipamento Santos FC",defKz:52000,defEur:40},
-    {id:"palmeiras-demo",nome:"Equipamento Palmeiras",defKz:52000,defEur:40},
-    {id:"corinthians-demo",nome:"Equipamento Corinthians",defKz:52000,defEur:40},
-    {id:"saopaulo-demo",nome:"Equipamento São Paulo",defKz:52000,defEur:40},
-    {id:"fluminense-demo",nome:"Equipamento Fluminense",defKz:52000,defEur:40},
-    {id:"internacional-demo",nome:"Equipamento Internacional",defKz:52000,defEur:40},
-    {id:"botafogo-demo",nome:"Equipamento Botafogo",defKz:52000,defEur:40},
-    {id:"vasco-demo",nome:"Equipamento Vasco da Gama",defKz:52000,defEur:40},
-
-    {id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},
-    {id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},
-    {id:"ysl-demo",nome:"Yves Saint Laurent Libre",defKz:32000,defEur:50},
-    {id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},
-    {id:"zara-demo",nome:"Perfume Zara",defKz:18000,defEur:29}
+const demoEquip=[
+{id:"rm-demo",nome:"Real Madrid",defKz:52000,defEur:40},{id:"barca-demo",nome:"Barcelona",defKz:52000,defEur:40},{id:"benfica-demo",nome:"Benfica",defKz:52000,defEur:40},{id:"sporting-demo",nome:"Sporting",defKz:52000,defEur:40},{id:"porto-demo",nome:"FC Porto",defKz:52000,defEur:40},{id:"bayern-demo",nome:"Bayern",defKz:52000,defEur:40},{id:"city-demo",nome:"Man City",defKz:52000,defEur:40},{id:"united-demo",nome:"Man United",defKz:52000,defEur:40},{id:"liverpool-demo",nome:"Liverpool",defKz:52000,defEur:40},{id:"arsenal-demo",nome:"Arsenal",defKz:52000,defEur:40},{id:"psg-demo",nome:"PSG",defKz:52000,defEur:40},{id:"milan-demo",nome:"AC Milan",defKz:52000,defEur:40},{id:"juventus-demo",nome:"Juventus",defKz:52000,defEur:40},{id:"inter-demo",nome:"Inter",defKz:52000,defEur:40},{id:"flamengo-demo",nome:"Flamengo",defKz:52000,defEur:40},{id:"santos-demo",nome:"Santos FC",defKz:52000,defEur:40},{id:"palmeiras-demo",nome:"Palmeiras",defKz:52000,defEur:40},{id:"corinthians-demo",nome:"Corinthians",defKz:52000,defEur:40},{id:"saopaulo-demo",nome:"São Paulo",defKz:52000,defEur:40},{id:"fluminense-demo",nome:"Fluminense",defKz:52000,defEur:40},{id:"internacional-demo",nome:"Internacional",defKz:52000,defEur:40},{id:"botafogo-demo",nome:"Botafogo",defKz:52000,defEur:40},{id:"vasco-demo",nome:"Vasco",defKz:52000,defEur:40}
+];
+const demoPerf=[
+{id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},{id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},{id:"ysl-demo",nome:"YSL Libre",defKz:32000,defEur:50},{id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},{id:"zara-demo",nome:"Zara",defKz:18000,defEur:29}
 ];
 
-const loginBox = document.getElementById("loginBox");
-const panel = document.getElementById("panel");
-const lista = document.getElementById("lista");
-const msg = document.getElementById("msg");
+let tab='equip'; let dados={}; let perc=25;
+function login(){auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.message)}
+function logout(){auth.signOut()}
+auth.onAuthStateChanged(u=>{loginBox.classList.toggle('hidden',!!u);panel.classList.toggle('hidden',!u);btnOut.classList.toggle('hidden',!u);if(u)load()})
 
-function login(){
-    msg.textContent = "";
+function load(){
+ db.ref().once('value',s=>{
+  const all=s.val()||{}; dados=all.produtos||{}; const cfg=all.config||{};
+  perc=cfg.personalizadoPercent!=null?cfg.personalizadoPercent:25;
+  cfgPerc.value=perc; onPercChange(); render();
+ });
+}
+function setTab(t){tab=t; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); document.getElementById(t==='equip'?'tEquip':t==='perf'?'tPerf':'tCfg').classList.add('active'); sBox.classList.toggle('hidden',t==='cfg'); lista.classList.toggle('hidden',t==='cfg'); cfgArea.classList.toggle('hidden',t!=='cfg'); render();}
 
-    const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("pass").value;
-    const btn = document.getElementById("loginBtn");
-
-    if(!email || !pass){
-        msg.textContent = "Preenche o email e a senha.";
-        return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "A entrar...";
-
-    auth.signInWithEmailAndPassword(email, pass)
-        .catch(e => {
-            msg.textContent = e.message;
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.textContent = "Entrar";
-        });
+function getPriceObj(id,defKz,defEur){
+ const fb=dados[id]||{};
+ return {kz: fb.precoKz!=null?Number(fb.precoKz):defKz, eur: fb.precoEUR!=null?Number(fb.precoEUR):defEur};
+}
+function onPercChange(){
+ perc=Number(cfgPerc.value)||0;
+ cfgEx.innerText=`Exemplo: 52.000 Kz + ${perc}% = ${Math.round(52000*(1+perc/100)).toLocaleString('pt-PT')} Kz | 40€ + ${perc}% = ${(40*(1+perc/100)).toFixed(2)}€`;
+ render();
 }
 
-function logout(){
-    auth.signOut();
+function render(){
+ const q=(document.getElementById('q').value||'').toLowerCase();
+ let itens=tab==='equip'?demoEquip:demoPerf;
+ if(tab!=='cfg' && q) itens=itens.filter(p=>p.nome.toLowerCase().includes(q));
+ if(tab==='cfg') return;
+ lista.innerHTML=itens.map(p=>{
+  const pr=getPriceObj(p.id,p.defKz,p.defEur);
+  const persKz=Math.round(pr.kz*(1+perc/100));
+  const persEur=(pr.eur*(1+perc/100)).toFixed(2);
+  const isEquip=tab==='equip';
+  return `<div class="card"><b>${p.nome}<small> ${p.id}</small></b>
+  <div><label>KZ Normal</label><input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')"></div>
+  <div><label>EUR Normal</label><input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')"></div>
+  <div><label>&nbsp;</label><button class="btn" onclick="save('${p.id}')">Salvar</button></div>
+  ${isEquip?`<div class="pers"><span>Personalizada (+${perc}%):</span><strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong></div>`:`<div class="pers"><span>Perfume - preço único</span><strong>—</strong></div>`}
+  </div>`;
+ }).join('');
 }
 
-auth.onAuthStateChanged(user => {
-    loginBox.style.display = user ? "none" : "block";
-    panel.style.display = user ? "block" : "none";
-
-    if(user){
-        carregar();
-        carregarPrecoBase();
-    }
-});
-
-function carregar(){
-    lista.textContent = "A carregar preços...";
-
-    db.ref("produtos").once("value")
-        .then(snap => {
-            const dados = {};
-
-            if(snap.exists()){
-                snap.forEach(c => {
-                    dados[c.key] = c.val() || {};
-                });
-            }
-
-            lista.innerHTML = "";
-
-            demoProducts.forEach(p => {
-                const fb = dados[p.id] || {};
-
-                const kz = fb.precoKz != null
-                    ? fb.precoKz
-                    : p.defKz;
-
-                const eur = fb.precoEUR != null
-                    ? fb.precoEUR
-                    : p.defEur;
-
-                const item = document.createElement("div");
-                item.className = "item";
-
-                const nome = document.createElement("b");
-                nome.textContent = p.nome;
-
-                const codigo = document.createElement("small");
-                codigo.textContent = p.id;
-                nome.appendChild(codigo);
-
-                const campoKz = criarCampo(
-                    "Kz",
-                    "kz_" + p.id,
-                    kz
-                );
-
-                const campoEur = criarCampo(
-                    "EUR €",
-                    "eur_" + p.id,
-                    eur
-                );
-
-                const areaBotao = document.createElement("div");
-                const label = document.createElement("label");
-                label.innerHTML = "&nbsp;";
-
-                const botao = document.createElement("button");
-                botao.textContent = "Guardar";
-                botao.onclick = () => salvar(p.id, botao);
-
-                areaBotao.append(label, botao);
-                item.append(nome, campoKz, campoEur, areaBotao);
-                lista.appendChild(item);
-            });
-        })
-        .catch(e => {
-            lista.textContent = "Erro ao carregar preços: " + e.message;
-        });
+function livePers(id){
+ const kz=Number(document.getElementById('kz_'+id)?.value)||0;
+ const eur=Number(document.getElementById('eur_'+id)?.value)||0;
+ const el=document.getElementById('pers_'+id);
+ if(el) el.innerText=`${Math.round(kz*(1+perc/100)).toLocaleString('pt-PT')} Kz / €${(eur*(1+perc/100)).toFixed(2)}`;
 }
 
-function criarCampo(titulo, id, valor){
-    const area = document.createElement("div");
-
-    const label = document.createElement("label");
-    label.textContent = titulo;
-    label.htmlFor = id;
-
-    const input = document.createElement("input");
-    input.id = id;
-    input.type = "number";
-    input.min = "0";
-    input.step = "0.01";
-    input.value = valor;
-
-    area.append(label, input);
-    return area;
+function save(id){
+ const kz=Number(document.getElementById('kz_'+id).value);
+ const eur=Number(document.getElementById('eur_'+id).value);
+ // SÓ PREÇO
+ db.ref('produtos/'+id).set({precoKz:kz,precoEUR:eur}).then(()=>{
+  dados[id]={precoKz:kz,precoEUR:eur};
+  const btn=document.querySelector(`button[onclick="save('${id}')"]`);
+  const old=btn.innerText; btn.innerText='✓ Salvo'; setTimeout(()=>btn.innerText=old,1500);
+ });
 }
 
-function validarPreco(valor){
-    return valor.trim() !== "" &&
-           Number.isFinite(Number(valor)) &&
-           Number(valor) >= 0;
+function saveCfg(){
+ const p=Number(cfgPerc.value);
+ db.ref('config').update({personalizadoPercent:p}).then(()=>{alert(`Percentagem salva: +${p}% . O site principal já vai calcular personalizada = normal + ${p}%`);});
 }
-
-function salvar(id, botao){
-    const campoKz = document.getElementById("kz_" + id);
-    const campoEur = document.getElementById("eur_" + id);
-
-    if(!validarPreco(campoKz.value) ||
-       !validarPreco(campoEur.value)){
-        alert("Introduz preços válidos nos dois campos.");
-        return;
-    }
-
-    const kz = Number(campoKz.value);
-    const eur = Number(campoEur.value);
-
-    botao.disabled = true;
-    botao.textContent = "A guardar...";
-
-    db.ref("produtos/" + id)
-        .update({
-            precoKz: kz,
-            precoEUR: eur
-        })
-        .then(() => {
-            botao.textContent = "Guardado!";
-        })
-        .catch(e => {
-            alert("Não foi possível guardar: " + e.message);
-            botao.textContent = "Tentar novamente";
-        })
-        .finally(() => {
-            botao.disabled = false;
-
-            setTimeout(() => {
-                botao.textContent = "Guardar";
-            }, 1800);
-        });
-}
-
-function carregarPrecoBase(){
-    const estado = document.getElementById("baseEstado");
-
-    db.ref("configuracao/precosEquipamentos").once("value")
-        .then(snap => {
-            if(snap.exists()){
-                const dados = snap.val();
-
-                if(dados.precoKz != null){
-                    document.getElementById("baseKz").value = dados.precoKz;
-                }
-
-                if(dados.precoEUR != null){
-                    document.getElementById("baseEur").value = dados.precoEUR;
-                }
-            }
-
-            estado.textContent = "";
-        })
-        .catch(e => {
-            estado.textContent = "Erro ao carregar preço base: " + e.message;
-        });
-}
-
-function salvarPrecoBase(){
-    const kzCampo = document.getElementById("baseKz");
-    const eurCampo = document.getElementById("baseEur");
-    const botao = document.getElementById("baseBtn");
-    const estado = document.getElementById("baseEstado");
-
-    if(!validarPreco(kzCampo.value) ||
-       !validarPreco(eurCampo.value)){
-        estado.textContent = "Introduz preços base válidos.";
-        return;
-    }
-
-    botao.disabled = true;
-    botao.textContent = "A guardar...";
-    estado.textContent = "";
-
-    db.ref("configuracao/precosEquipamentos")
-        .update({
-            precoKz: Number(kzCampo.value),
-            precoEUR: Number(eurCampo.value)
-        })
-        .then(() => {
-            estado.textContent = "Preço base guardado com sucesso.";
-        })
-        .catch(e => {
-            estado.textContent = "Erro ao guardar: " + e.message;
-        })
-        .finally(() => {
-            botao.disabled = false;
-            botao.textContent = "Guardar preço base";
-        });
-}
-</script>
-
-</body>
-</html>
+</script></body></html>
