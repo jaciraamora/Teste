@@ -2788,53 +2788,28 @@ function contactWhatsApp() {
 
 /* FIREBASE: CATÁLOGO DINÂMICO */
 
+// FIREBASE SÓ MUDA PREÇO - não cria produtos, não muda nome
 if (database) {
     database.ref("produtos").on("value", snapshot => {
-        const dadosFirebase = {};
+        const dados = {};
         if (snapshot.exists()) {
-            snapshot.forEach(child => {
-                dadosFirebase[child.key] = child.val();
-            });
+            snapshot.forEach(c => { dados[c.key] = c.val(); });
         }
 
-        // Começa sempre com todos do HTML
-        const listaFinal = demoProducts.map(demo => {
-            const fb = dadosFirebase[demo.id];
+        products = applyHtmlProductImages(demoProducts.map(demo => {
+            const fb = dados[demo.id];
             if (fb) {
                 return {
                     ...demo,
                     precoKz: fb.precoKz != null ? Number(fb.precoKz) : demo.precoKz,
-                    precoEUR: fb.precoEUR != null ? Number(fb.precoEUR) : demo.precoEUR,
-                    ativo: fb.ativo !== false
+                    precoEUR: fb.precoEUR != null ? Number(fb.precoEUR) : demo.precoEUR
                 };
             }
             return demo;
-        });
+        }));
 
-        // Adiciona também produtos novos que só existem no Firebase
-        if (snapshot.exists()) {
-            snapshot.forEach(child => {
-                const data = child.val();
-                if (!demoProducts.find(d => d.id === child.key)) {
-                    listaFinal.push({
-                        id: child.key,
-                        nome: data.nome || "Produto",
-                        categoria: data.categoria || "Outros",
-                        marca: data.marca || "",
-                        descricao: data.descricao || "",
-                        precoKz: Number(data.precoKz) || 0,
-                        precoEUR: Number(data.precoEUR) || 0,
-                        imagem: data.imagem || "",
-                        ativo: data.ativo !== false
-                    });
-                }
-            });
-        }
-
-        products = applyHtmlProductImages(listaFinal);
         renderProducts();
-    }, error => {
-        console.error("Erro:", error);
+    }, () => {
         products = applyHtmlProductImages([...demoProducts]);
         renderProducts();
     });
@@ -2842,33 +2817,11 @@ if (database) {
     renderProducts();
 }
 
+
 /* INICIAR SELEÇÃO DE CLUBES */
 
 updateClubOptions();
 updateCustomPrice();
-
-// Depois do firebase.initializeApp...
-const db = firebase.database();
-
-// Lista EXATA dos produtos que estão no teu HTML
-const listaProdutos = [
-  {id:"benfica", nome:"Equipamento Benfica", precoKz:52000, precoEUR:40},
-  {id:"porto", nome:"FC Porto", precoKz:52000, precoEUR:40},
-  // adiciona todos aqui com o mesmo ID que usas
-];
-
-listaProdutos.forEach(p=>{
-  db.ref("produtos/"+p.id).once("value", snap=>{
-    if(!snap.exists()){
-      // só cria se não existir, não apaga preço que mexeste no admin
-      db.ref("produtos/"+p.id).set(p);
-    } else {
-      // se já existe, só garante que o nome está atualizado
-      db.ref("produtos/"+p.id).update({nome: p.nome});
-    }
-  });
-});
-
 
 </script>
 
