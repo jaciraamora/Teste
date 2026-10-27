@@ -3,103 +3,967 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Orkap - Só Preços</title>
+<title>Orkap | Administração</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:Arial;background:#eef3f8;padding:16px;margin:0}
-.box{max-width:900px;margin:20px auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-input{padding:12px;border:1px solid #d1d9e6;border-radius:10px;width:100%;box-sizing:border-box;font-size:14px}
-button{padding:12px 16px;background:#2f6eae;color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;width:100%}
-.item{border:1px solid #e2e8f0;padding:16px;border-radius:12px;margin-top:12px;display:grid;grid-template-columns:1.5fr 1fr 1fr 0.8fr;gap:10px;align-items:end;background:#fafcff}
-.item b{grid-column:1/-1;font-size:15px}
-label{font-size:11px;color:#718096;font-weight:bold;display:block;margin-bottom:4px}
-@media(max-width:700px){.item{grid-template-columns:1fr 1fr} .item b{grid-column:1/-1}}
+:root{
+  --blue:#315f91;
+  --blue-dark:#23476f;
+  --blue-light:#edf4fb;
+  --bg:#f4f6f9;
+  --white:#fff;
+  --text:#202b3c;
+  --muted:#738095;
+  --border:#e1e7ef;
+  --green:#18865b;
+  --red:#c03939;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:13px;
+}
+
+button,input,select{font:inherit}
+
+button{cursor:pointer}
+
+.login-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.login-card{
+  background:#fff;
+  width:100%;
+  max-width:370px;
+  padding:28px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 12px 35px rgba(25,45,75,.07);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:24px;
+}
+
+.brand-mark{
+  width:40px;
+  height:40px;
+  background:var(--blue);
+  color:#fff;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:19px;
+}
+
+.brand h1{
+  font-size:19px;
+  margin:0;
+  letter-spacing:-.7px;
+}
+
+.brand p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.login-card h2{
+  font-size:19px;
+  margin:0 0 7px;
+}
+
+.subtitle{
+  color:var(--muted);
+  margin:0 0 22px;
+  line-height:1.5;
+}
+
+.field{margin-bottom:15px}
+
+label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  margin-bottom:6px;
+  color:#526176;
+}
+
+input,select{
+  width:100%;
+  min-width:0;
+  padding:10px 11px;
+  border:1px solid #d5deea;
+  border-radius:7px;
+  background:#fff;
+  color:#202b3c;
+  outline:none;
+  font-size:13px;
+}
+
+input:focus,select:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(49,95,145,.09);
+}
+
+input::placeholder{color:#9aa5b5}
+
+.btn{
+  border:0;
+  border-radius:7px;
+  padding:10px 13px;
+  background:var(--blue);
+  color:#fff;
+  font-weight:700;
+  font-size:12px;
+  transition:background .15s;
+}
+
+.btn:hover{background:var(--blue-dark)}
+
+.btn:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.btn-full{width:100%}
+
+.btn-light{
+  background:#edf2f8;
+  color:var(--blue-dark);
+}
+
+.btn-light:hover{background:#dfe9f5}
+
+.btn-danger{
+  background:#fff0f0;
+  color:var(--red);
+}
+
+.btn-danger:hover{
+  background:#ffe1e1;
+}
+
+.message{
+  font-size:12px;
+  margin-top:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.message.error{color:var(--red)}
+.message.success{color:var(--green)}
+
+#app{display:none}
+
+.topbar{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:13px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.topbar .brand{margin:0}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.admin-label{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.layout{
+  max-width:1180px;
+  margin:0 auto;
+  padding:22px;
+}
+
+.page-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:17px;
+}
+
+.page-heading h2{
+  font-size:22px;
+  margin:0;
+  letter-spacing:-.7px;
+}
+
+.page-heading p{
+  color:var(--muted);
+  margin:6px 0 0;
+  font-size:12px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:15px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+}
+
+.stat-number{
+  font-size:25px;
+  font-weight:800;
+  margin-top:7px;
+  letter-spacing:-1px;
+}
+
+.section{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:16px;
+  overflow:hidden;
+}
+
+.section-head{
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--border);
+}
+
+.section-head h3{
+  margin:0;
+  font-size:14px;
+}
+
+.section-head p{
+  color:var(--muted);
+  font-size:11px;
+  margin:5px 0 0;
+}
+
+.section-body{padding:15px}
+
+.base-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.base-card{
+  background:#f8fafc;
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:8px;
+}
+
+.base-card h4{
+  font-size:12px;
+  margin:0 0 12px;
+}
+
+.base-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.base-fields .btn{grid-column:1/-1}
+
+.search-row{
+  display:flex;
+  gap:9px;
+  align-items:center;
+  width:100%;
+}
+
+.search-row input{max-width:340px}
+
+.filters{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  padding:12px 15px 0;
+}
+
+.filter{
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:7px 12px;
+  color:#59677b;
+  background:#fff;
+  font-size:11px;
+  font-weight:700;
+}
+
+.filter.active{
+  color:var(--blue);
+  background:var(--blue-light);
+  border-color:#c9d9eb;
+}
+
+.product-list{
+  padding:12px 15px 15px;
+  display:grid;
+  gap:9px;
+}
+
+.product{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:minmax(150px,1.6fr) minmax(100px,1fr) minmax(100px,1fr) auto;
+  align-items:end;
+  gap:10px;
+  background:#fff;
+}
+
+.product-name{
+  min-width:0;
+  align-self:center;
+}
+
+.product-name strong{
+  display:block;
+  font-size:12px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+
+.product-name small{
+  display:block;
+  color:var(--muted);
+  margin-top:5px;
+  font-size:10px;
+  overflow-wrap:anywhere;
+}
+
+.product label{font-size:10px}
+
+.product input{padding:9px}
+
+.product .btn{white-space:nowrap}
+
+.status{
+  display:inline-block;
+  border-radius:5px;
+  background:#edf8f2;
+  color:var(--green);
+  font-size:10px;
+  padding:4px 6px;
+  margin-top:7px;
+  font-weight:700;
+}
+
+.empty{
+  padding:25px 10px;
+  color:var(--muted);
+  text-align:center;
+  line-height:1.6;
+}
+
+.footer{
+  text-align:center;
+  color:#96a0af;
+  font-size:10px;
+  padding:5px 0 18px;
+}
+
+@media(max-width:700px){
+  .topbar{padding:12px 14px}
+  .layout{padding:15px 12px}
+  .admin-label{display:none}
+  .page-heading h2{font-size:19px}
+  .stats{gap:7px}
+  .stat{padding:11px}
+  .stat-number{font-size:21px}
+  .stat-label{font-size:10px}
+  .base-grid{grid-template-columns:1fr}
+  .product{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:11px;
+  }
+  .product-name{grid-column:1/-1}
+  .product .save-wrap{grid-column:1/-1}
+  .product .btn{width:100%}
+  .section-head{padding:12px}
+  .section-body{padding:11px}
+  .search-row input{max-width:none}
+  .page-heading{align-items:flex-start}
+}
+
+@media(max-width:360px){
+  .login-card{padding:20px}
+  .stats{grid-template-columns:1fr}
+}
 </style>
 </head>
-<body> 
 
-<div class="box" id="loginBox">
-<h2>Administração da Loja Orkap</h2>
-<p style="color:#718096;font-size:13px">Entra para editar preços</p><br>
-<input id="email" placeholder="Email"><br><br>
-<input id="pass" type="password" placeholder="Senha"><br><br>
-<button onclick="login()">Entrar</button>
-<p id="msg" style="color:red;margin-top:10px"></p>
+<body>
+
+<div class="login-page" id="loginBox">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-mark">O</div>
+      <div>
+        <h1>ORKAP</h1>
+        <p>Gestão da loja online</p>
+      </div>
+    </div>
+
+    <h2>Iniciar sessão</h2>
+    <p class="subtitle">Acede ao painel de administração para gerir os preços dos teus produtos.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">E-MAIL</label>
+        <input id="email" type="email" placeholder="O teu e-mail" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="pass">PALAVRA-PASSE</label>
+        <input id="pass" type="password" placeholder="A tua palavra-passe" autocomplete="current-password" required>
+      </div>
+
+      <button class="btn btn-full" id="loginBtn" type="submit">Entrar no painel</button>
+      <div id="loginMsg" class="message" role="status"></div>
+    </form>
+  </div>
 </div>
 
-<div class="box" id="panel" style="display:none">
-<h2>Orkap - Gerir Preços</h2>
+<div id="app">
 
-<button onclick="logout()" style="background:#c0392b;margin:12px 0">Sair</button>
-<div id="lista"></div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">O</div>
+      <div>
+        <h1>ORKAP</h1>
+        <p>Painel administrativo</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <span class="admin-label">Gestão de preços</span>
+      <button class="btn btn-light" id="logoutBtn" type="button">Terminar sessão</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <div class="page-heading">
+      <div>
+        <h2>Gestão de produtos</h2>
+        <p>Consulta e atualiza os preços da loja.</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">TOTAL DE PRODUTOS</div>
+        <div class="stat-number" id="totalProdutos">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">EQUIPAMENTOS</div>
+        <div class="stat-number" id="totalEquipamentos">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">PERFUMES</div>
+        <div class="stat-number" id="totalPerfumes">0</div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h3>Preços-base dos equipamentos</h3>
+          <p>Define os valores da opção de equipamento normal no site.</p>
+        </div>
+      </div>
+
+      <div class="section-body">
+        <div class="base-grid">
+
+          <div class="base-card">
+            <h4>Preço-base em kwanzas</h4>
+            <div class="base-fields">
+              <div>
+                <label for="baseKz">VALOR EM KZ</label>
+                <input id="baseKz" type="number" min="0" step="1" placeholder="25000">
+              </div>
+              <div>
+                <label for="baseKzCustom">PERSONALIZADO (+)</label>
+                <input id="baseKzCustom" type="number" min="0" step="1" value="20000">
+              </div>
+              <button class="btn" type="button" id="saveBaseKz">Guardar preços Kz</button>
+            </div>
+          </div>
+
+          <div class="base-card">
+            <h4>Preço-base em euros</h4>
+            <div class="base-fields">
+              <div>
+                <label for="baseEur">VALOR EM €</label>
+                <input id="baseEur" type="number" min="0" step="0.01" placeholder="40">
+              </div>
+              <div>
+                <label for="baseEurCustom">PERSONALIZADO (+)</label>
+                <input id="baseEurCustom" type="number" min="0" step="0.01" value="20">
+              </div>
+              <button class="btn" type="button" id="saveBaseEur">Guardar preços €</button>
+            </div>
+          </div>
+
+        </div>
+        <div id="baseMsg" class="message" role="status"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h3>Catálogo de produtos</h3>
+          <p>Altera cada preço de forma independente.</p>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="todos" type="button">Todos</button>
+        <button class="filter" data-filter="equipamento" type="button">Equipamentos</button>
+        <button class="filter" data-filter="perfume" type="button">Perfumes</button>
+      </div>
+
+      <div class="section-body">
+        <div class="search-row">
+          <input id="search" type="search" placeholder="Pesquisar produto...">
+        </div>
+      </div>
+
+      <div id="lista" class="product-list">
+        <div class="empty">A carregar produtos...</div>
+      </div>
+    </section>
+
+    <div id="globalMsg" class="message" role="status"></div>
+
+    <div class="footer">ORKAP · Painel de administração</div>
+
+  </main>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script>
-const firebaseConfig={apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",authDomain:"orkap-d13c6.firebaseapp.com",databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",projectId:"orkap-d13c6",storageBucket:"orkap-d13c6.firebasestorage.app",messagingSenderId:"571248205991",appId:"1:571248205991:web:65dca626cee2be2f74fb82"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-const auth=firebase.auth();
 
-// ESTA É A LISTA DO TEU SITE PRINCIPAL - SE ADICIONARES PRODUTO NOVO, ADICIONA AQUI TAMBÉM
-const demoProducts=[
-{id:"rm-demo",nome:"Equipamento Real Madrid",defKz:52000,defEur:40},
-{id:"barca-demo",nome:"Equipamento Barcelona",defKz:52000,defEur:40},
-{id:"benfica-demo",nome:"Equipamento Benfica",defKz:52000,defEur:40},
-{id:"sporting-demo",nome:"Equipamento Sporting",defKz:52000,defEur:40},
-{id:"porto-demo",nome:"Equipamento FC Porto",defKz:52000,defEur:40},
-{id:"bayern-demo",nome:"Equipamento Bayern",defKz:52000,defEur:40},
-{id:"city-demo",nome:"Equipamento Manchester City",defKz:52000,defEur:40},
-{id:"united-demo",nome:"Equipamento Manchester United",defKz:52000,defEur:40},
-{id:"liverpool-demo",nome:"Equipamento Liverpool",defKz:52000,defEur:40},
-{id:"arsenal-demo",nome:"Equipamento Arsenal",defKz:52000,defEur:40},
-{id:"psg-demo",nome:"Equipamento PSG",defKz:52000,defEur:40},
-{id:"milan-demo",nome:"Equipamento AC Milan",defKz:52000,defEur:40},
-{id:"juventus-demo",nome:"Equipamento Juventus",defKz:52000,defEur:40},
-{id:"inter-demo",nome:"Equipamento Inter",defKz:52000,defEur:40},
-{id:"flamengo-demo",nome:"Equipamento Flamengo",defKz:52000,defEur:40},
-{id:"santos-demo",nome:"Equipamento Santos FC",defKz:52000,defEur:40},
-{id:"palmeiras-demo",nome:"Equipamento Palmeiras",defKz:52000,defEur:40},
-{id:"corinthians-demo",nome:"Equipamento Corinthians",defKz:52000,defEur:40},
-{id:"saopaulo-demo",nome:"Equipamento São Paulo",defKz:52000,defEur:40},
-{id:"fluminense-demo",nome:"Equipamento Fluminense",defKz:52000,defEur:40},
-{id:"internacional-demo",nome:"Equipamento Internacional",defKz:52000,defEur:40},
-{id:"botafogo-demo",nome:"Equipamento Botafogo",defKz:52000,defEur:40},
-{id:"vasco-demo",nome:"Equipamento Vasco da Gama",defKz:52000,defEur:40},
-{id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},
-{id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},
-{id:"ysl-demo",nome:"Yves Saint Laurent Libre",defKz:32000,defEur:50},
-{id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},
-{id:"zara-demo",nome:"Perfume Zara",defKz:18000,defEur:29}
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",
+  authDomain: "orkap-d13c6.firebaseapp.com",
+  databaseURL: "https://orkap-d13c6-default-rtdb.firebaseio.com",
+  projectId: "orkap-d13c6",
+  storageBucket: "orkap-d13c6.firebasestorage.app",
+  messagingSenderId: "571248205991",
+  appId: "1:571248205991:web:65dca626cee2be2f74fb82"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+const auth = firebase.auth();
+
+const $ = id => document.getElementById(id);
+
+let produtos = [];
+let filtroAtual = "todos";
+
+const demoProducts = [
+  {id:"rm-demo",nome:"Equipamento Real Madrid",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"barca-demo",nome:"Equipamento Barcelona",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"benfica-demo",nome:"Equipamento Benfica",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"sporting-demo",nome:"Equipamento Sporting",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"porto-demo",nome:"Equipamento FC Porto",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"bayern-demo",nome:"Equipamento Bayern",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"city-demo",nome:"Equipamento Manchester City",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"united-demo",nome:"Equipamento Manchester United",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"liverpool-demo",nome:"Equipamento Liverpool",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"arsenal-demo",nome:"Equipamento Arsenal",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"psg-demo",nome:"Equipamento PSG",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"milan-demo",nome:"Equipamento AC Milan",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"juventus-demo",nome:"Equipamento Juventus",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"inter-demo",nome:"Equipamento Inter",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"flamengo-demo",nome:"Equipamento Flamengo",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"santos-demo",nome:"Equipamento Santos FC",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"palmeiras-demo",nome:"Equipamento Palmeiras",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"corinthians-demo",nome:"Equipamento Corinthians",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"saopaulo-demo",nome:"Equipamento São Paulo",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"fluminense-demo",nome:"Equipamento Fluminense",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"internacional-demo",nome:"Equipamento Internacional",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"botafogo-demo",nome:"Equipamento Botafogo",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"vasco-demo",nome:"Equipamento Vasco da Gama",categoria:"equipamento",defKz:52000,defEur:40},
+  {id:"sauvage-demo",nome:"Dior Sauvage",categoria:"perfume",defKz:30000,defEur:48},
+  {id:"rabanne-demo",nome:"Paco Rabanne",categoria:"perfume",defKz:35000,defEur:55},
+  {id:"ysl-demo",nome:"Yves Saint Laurent Libre",categoria:"perfume",defKz:32000,defEur:50},
+  {id:"dolce-demo",nome:"Dolce Gabbana",categoria:"perfume",defKz:30000,defEur:48},
+  {id:"zara-demo",nome:"Perfume Zara",categoria:"perfume",defKz:18000,defEur:29}
 ];
 
-function login(){msg.innerText="";auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.code+" - "+e.message)}
-function logout(){auth.signOut()}
-auth.onAuthStateChanged(u=>{loginBox.style.display=u?'none':'block';panel.style.display=u?'block':'none';if(u)carregar()})
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
 
-function carregar(){
- lista.innerHTML="A carregar preços...";
- db.ref("produtos").once("value",snap=>{
-   const dados={}; if(snap.exists()) snap.forEach(c=>dados[c.key]=c.val());
-   lista.innerHTML="";
-   demoProducts.forEach(p=>{
-     const fb=dados[p.id]||{};
-     const kz=fb.precoKz!=null?fb.precoKz:p.defKz;
-     const eur=fb.precoEUR!=null?fb.precoEUR:p.defEur;
-     lista.innerHTML+=`<div class="item"><b>${p.nome}<small style="color:#888"> (${p.id})</small></b>
-       <div><label>Kz</label><input id="kz_${p.id}" type="number" value="${kz}"></div>
-       <div><label>EUR €</label><input id="eur_${p.id}" type="number" value="${eur}"></div>
-       <div><label>&nbsp;</label><button onclick="salvar('${p.id}')">Salvar</button></div></div>`;
-   });
- }).catch(e=>lista.innerHTML="Erro: "+e.message);
+  const btn = $("loginBtn");
+  const msg = $("loginMsg");
+
+  msg.textContent = "";
+  msg.className = "message";
+
+  if (!$("email").value.trim() || !$("pass").value) {
+    msg.textContent = "Preenche o e-mail e a palavra-passe.";
+    msg.classList.add("error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "A verificar...";
+
+  try {
+    await auth.signInWithEmailAndPassword(
+      $("email").value.trim(),
+      $("pass").value
+    );
+  } catch (e) {
+    msg.textContent = mensagemErro(e);
+    msg.classList.add("error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Entrar no painel";
+  }
+});
+
+$("logoutBtn").addEventListener("click", () => auth.signOut());
+
+function mensagemErro(e) {
+  const erros = {
+    "auth/invalid-credential":"E-mail ou palavra-passe incorretos.",
+    "auth/wrong-password":"Palavra-passe incorreta.",
+    "auth/user-not-found":"Não existe uma conta com este e-mail.",
+    "auth/invalid-email":"O formato do e-mail não é válido.",
+    "auth/too-many-requests":"Demasiadas tentativas. Tenta novamente mais tarde.",
+    "auth/network-request-failed":"Sem ligação à internet. Verifica a ligação."
+  };
+
+  return erros[e.code] || "Não foi possível continuar: " + (e.message || e.code);
 }
 
-function salvar(id){
- const kz=Number(document.getElementById("kz_"+id).value);
- const eur=Number(document.getElementById("eur_"+id).value);
- db.ref("produtos/"+id).set({precoKz:kz,precoEUR:eur}).then(()=>{alert("Preço salvo! "+id+" -> Kz "+kz+" / € "+eur)}).catch(e=>alert(e.message));
+auth.onAuthStateChanged(user => {
+  $("loginBox").style.display = user ? "none" : "flex";
+  $("app").style.display = user ? "block" : "none";
+
+  if (user) {
+    carregar();
+    carregarPrecosBase();
+  }
+});
+
+function categoriaProduto(p) {
+  const categoria = String(p.categoria || "").toLowerCase();
+  const nome = String(p.nome || "").toLowerCase();
+
+  if (
+    categoria.includes("perfume") ||
+    nome.includes("perfume") ||
+    nome.includes("dior") ||
+    nome.includes("rabanne") ||
+    nome.includes("ysl") ||
+    nome.includes("yves saint laurent") ||
+    nome.includes("dolce gabbana") ||
+    nome.includes("zara")
+  ) {
+    return "perfume";
+  }
+
+  return "equipamento";
 }
+
+async function carregar() {
+  $("lista").innerHTML = '<div class="empty">A carregar produtos...</div>';
+
+  try {
+    const snap = await db.ref("produtos").once("value");
+    const dados = [];
+
+    if (snap.exists()) {
+      snap.forEach(child => {
+        const p = child.val() || {};
+
+        dados.push({
+          ...p,
+          id: child.key,
+          categoria: categoriaProduto(p),
+          precoKz: p.precoKz ?? 0,
+          precoEUR: p.precoEUR ?? 0
+        });
+      });
+    }
+
+    /*
+      Os produtos de demonstração são apresentados como referência
+      quando ainda não existem produtos na base de dados.
+      Não são gravados automaticamente no Firebase.
+    */
+    produtos = dados.length ? dados : demoProducts.map(p => ({
+      ...p,
+      precoKz:p.defKz,
+      precoEUR:p.defEur,
+      apenasDemonstracao:true
+    }));
+
+    atualizarResumo();
+    renderizar();
+
+    if (!dados.length) {
+      $("globalMsg").textContent =
+        "A base de dados ainda não contém produtos. Os produtos apresentados são apenas referências; guarda um preço para criar o respetivo registo.";
+      $("globalMsg").className = "message";
+    } else {
+      $("globalMsg").textContent = "";
+    }
+
+  } catch (e) {
+    $("lista").innerHTML =
+      '<div class="empty">Não foi possível carregar os produtos. Verifica as permissões do Firebase.</div>';
+
+    $("globalMsg").textContent = mensagemErro(e);
+    $("globalMsg").className = "message error";
+  }
+}
+
+function atualizarResumo() {
+  $("totalProdutos").textContent = produtos.length;
+  $("totalEquipamentos").textContent =
+    produtos.filter(p => categoriaProduto(p) === "equipamento").length;
+  $("totalPerfumes").textContent =
+    produtos.filter(p => categoriaProduto(p) === "perfume").length;
+}
+
+function renderizar() {
+  const pesquisa = $("search").value.trim().toLowerCase();
+
+  const lista = produtos.filter(p => {
+    const categoria = categoriaProduto(p);
+
+    return (
+      (filtroAtual === "todos" || categoria === filtroAtual) &&
+      String(p.nome || p.id).toLowerCase().includes(pesquisa)
+    );
+  });
+
+  if (!lista.length) {
+    $("lista").innerHTML =
+      '<div class="empty">Não foram encontrados produtos.</div>';
+    return;
+  }
+
+  $("lista").innerHTML = lista.map(p => `
+    <article class="product">
+      <div class="product-name">
+        <strong>${escapar(p.nome || p.id)}</strong>
+        <small>${escapar(p.id)}</small>
+        <span class="status">${categoriaProduto(p) === "perfume" ? "Perfume" : "Equipamento"}</span>
+      </div>
+
+      <div>
+        <label for="kz_${escapar(p.id)}">PREÇO EM KZ</label>
+        <input id="kz_${escapar(p.id)}" type="number" min="0" step="1"
+          value="${Number(p.precoKz) || 0}">
+      </div>
+
+      <div>
+        <label for="eur_${escapar(p.id)}">PREÇO EM €</label>
+        <input id="eur_${escapar(p.id)}" type="number" min="0" step="0.01"
+          value="${Number(p.precoEUR) || 0}">
+      </div>
+
+      <div class="save-wrap">
+        <button class="btn" type="button"
+          onclick="salvarProduto('${escaparJS(p.id)}')">Guardar</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function escapar(valor) {
+  return String(valor).replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function escaparJS(valor) {
+  return String(valor).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
+
+async function salvarProduto(id) {
+  const kzInput = $("kz_" + id);
+  const eurInput = $("eur_" + id);
+
+  if (!kzInput || !eurInput) return;
+
+  const kz = Number(kzInput.value);
+  const eur = Number(eurInput.value);
+
+  if (
+    kzInput.value.trim() === "" ||
+    eurInput.value.trim() === "" ||
+    !Number.isFinite(kz) ||
+    !Number.isFinite(eur) ||
+    kz < 0 ||
+    eur < 0
+  ) {
+    alert("Introduz preços válidos e não negativos.");
+    return;
+  }
+
+  try {
+    const existente = produtos.find(p => p.id === id);
+    const atualizacao = {
+      precoKz:kz,
+      precoEUR:eur
+    };
+
+    /*
+      update altera apenas os preços.
+      Os restantes dados do produto são preservados.
+    */
+    await db.ref("produtos/" + id).update(atualizacao);
+
+    if (existente) {
+      existente.precoKz = kz;
+      existente.precoEUR = eur;
+      existente.apenasDemonstracao = false;
+    }
+
+    $("globalMsg").textContent =
+      "Preços guardados para " + (existente?.nome || id) + ".";
+    $("globalMsg").className = "message success";
+
+  } catch (e) {
+    alert("Não foi possível guardar os preços: " + e.message);
+  }
+}
+
+async function carregarPrecosBase() {
+  try {
+    const snap = await db.ref("configuracao/precosEquipamentos").once("value");
+    const dados = snap.val() || {};
+
+    $("baseKz").value = dados.kz ?? 25000;
+    $("baseEur").value = dados.eur ?? 40;
+
+    $("baseKzCustom").value = dados.personalizadoKz ?? 20000;
+    $("baseEurCustom").value = dados.personalizadoEUR ?? 20;
+
+  } catch (e) {
+    $("baseMsg").textContent =
+      "Não foi possível ler os preços-base: " + e.message;
+    $("baseMsg").className = "message error";
+  }
+}
+
+async function salvarPrecoBase(moeda) {
+  const kz = Number($("baseKz").value);
+  const eur = Number($("baseEur").value);
+  const personalizadoKz = Number($("baseKzCustom").value);
+  const personalizadoEUR = Number($("baseEurCustom").value);
+
+  if (
+    $("baseKz").value.trim() === "" ||
+    $("baseEur").value.trim() === "" ||
+    $("baseKzCustom").value.trim() === "" ||
+    $("baseEurCustom").value.trim() === "" ||
+    ![kz,eur,personalizadoKz,personalizadoEUR].every(Number.isFinite) ||
+    [kz,eur,personalizadoKz,personalizadoEUR].some(n => n < 0)
+  ) {
+    $("baseMsg").textContent = "Preenche todos os campos com valores válidos.";
+    $("baseMsg").className = "message error";
+    return;
+  }
+
+  const dados = moeda === "Kz"
+    ? {kz, personalizadoKz}
+    : {eur, personalizadoEUR};
+
+  try {
+    await db.ref("configuracao/precosEquipamentos").update(dados);
+
+    $("baseMsg").textContent =
+      "Preços-base em " + moeda + " guardados com sucesso.";
+    $("baseMsg").className = "message success";
+
+  } catch (e) {
+    $("baseMsg").textContent = "Erro ao guardar: " + e.message;
+    $("baseMsg").className = "message error";
+  }
+}
+
+$("saveBaseKz").addEventListener("click", () => salvarPrecoBase("Kz"));
+$("saveBaseEur").addEventListener("click", () => salvarPrecoBase("EUR"));
+
+$("search").addEventListener("input", renderizar);
+
+document.querySelectorAll(".filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    filtroAtual = btn.dataset.filter;
+
+    document.querySelectorAll(".filter").forEach(b => {
+      b.classList.toggle("active", b === btn);
+    });
+
+    renderizar();
+  });
+});
 </script>
+
 </body>
 </html>
