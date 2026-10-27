@@ -1,26 +1,105 @@
-<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Orkap</title>
-<style>body{font-family:Arial;background:#eef3f8;padding:16px} .box{max-width:900px;margin:20px auto;background:#fff;padding:24px;border-radius:16px} input{padding:14px;border:1px solid #ccc;border-radius:10px;width:100%;box-sizing:border-box;font-size:16px} button{padding:14px 20px;background:#2f6eae;color:#fff;border:none;border-radius:10px;font-weight:800;font-size:16px;width:100%;cursor:pointer} .item{border:1px solid #e2e8f0;padding:16px;border-radius:12px;margin-top:12px}</style>
-</head><body>
-<div class="box" id="loginBox"><h3>Admin Orkap</h3><input id="email" placeholder="Email"><br><br><input id="pass" type="password" placeholder="Senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;margin-top:10px"></p><p id="debug" style="font-size:11px;color:#888"></p></div>
-<div class="box" id="panel" style="display:none"><h3>Preços</h3><button onclick="logout()" style="background:#c0392b">Sair</button><div id="lista" style="margin-top:15px"></div></div>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Orkap - Só Preços</title>
+<style>
+body{font-family:Arial;background:#eef3f8;padding:16px;margin:0}
+.box{max-width:900px;margin:20px auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+input{padding:12px;border:1px solid #d1d9e6;border-radius:10px;width:100%;box-sizing:border-box;font-size:14px}
+button{padding:12px 16px;background:#2f6eae;color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;width:100%}
+.item{border:1px solid #e2e8f0;padding:16px;border-radius:12px;margin-top:12px;display:grid;grid-template-columns:1.5fr 1fr 1fr 0.8fr;gap:10px;align-items:end;background:#fafcff}
+.item b{grid-column:1/-1;font-size:15px}
+label{font-size:11px;color:#718096;font-weight:bold;display:block;margin-bottom:4px}
+@media(max-width:700px){.item{grid-template-columns:1fr 1fr} .item b{grid-column:1/-1}}
+</style>
+</head>
+<body> 
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<div class="box" id="loginBox">
+<h2>Administração da Loja Orkap</h2>
+<p style="color:#718096;font-size:13px">Entra para editar preços</p><br>
+<input id="email" placeholder="Email"><br><br>
+<input id="pass" type="password" placeholder="Senha"><br><br>
+<button onclick="login()">Entrar</button>
+<p id="msg" style="color:red;margin-top:10px"></p>
+</div>
+
+<div class="box" id="panel" style="display:none">
+<h2>Orkap - Gerir Preços</h2>
+
+<button onclick="logout()" style="background:#c0392b;margin:12px 0">Sair</button>
+<div id="lista"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig={apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",authDomain:"orkap-d13c6.firebaseapp.com",databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",projectId:"orkap-d13c6",storageBucket:"orkap-d13c6.firebasestorage.app",messagingSenderId:"571248205991",appId:"1:571248205991:web:65dca626cee2be2f74fb82"};
-try{firebase.initializeApp(firebaseConfig);document.getElementById("debug").innerText="Firebase OK"}catch(e){document.getElementById("debug").innerText=e.message}
-const db=firebase.database();const auth=firebase.auth();
-function login(){msg.innerText="A entrar...";auth.signInWithEmailAndPassword(document.getElementById("email").value,document.getElementById("pass").value).then(()=>{msg.innerText=""}).catch(e=>{msg.innerText=e.code+" : "+e.message})}
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const auth=firebase.auth();
+
+// ESTA É A LISTA DO TEU SITE PRINCIPAL - SE ADICIONARES PRODUTO NOVO, ADICIONA AQUI TAMBÉM
+const demoProducts=[
+{id:"rm-demo",nome:"Equipamento Real Madrid",defKz:52000,defEur:40},
+{id:"barca-demo",nome:"Equipamento Barcelona",defKz:52000,defEur:40},
+{id:"benfica-demo",nome:"Equipamento Benfica",defKz:52000,defEur:40},
+{id:"sporting-demo",nome:"Equipamento Sporting",defKz:52000,defEur:40},
+{id:"porto-demo",nome:"Equipamento FC Porto",defKz:52000,defEur:40},
+{id:"bayern-demo",nome:"Equipamento Bayern",defKz:52000,defEur:40},
+{id:"city-demo",nome:"Equipamento Manchester City",defKz:52000,defEur:40},
+{id:"united-demo",nome:"Equipamento Manchester United",defKz:52000,defEur:40},
+{id:"liverpool-demo",nome:"Equipamento Liverpool",defKz:52000,defEur:40},
+{id:"arsenal-demo",nome:"Equipamento Arsenal",defKz:52000,defEur:40},
+{id:"psg-demo",nome:"Equipamento PSG",defKz:52000,defEur:40},
+{id:"milan-demo",nome:"Equipamento AC Milan",defKz:52000,defEur:40},
+{id:"juventus-demo",nome:"Equipamento Juventus",defKz:52000,defEur:40},
+{id:"inter-demo",nome:"Equipamento Inter",defKz:52000,defEur:40},
+{id:"flamengo-demo",nome:"Equipamento Flamengo",defKz:52000,defEur:40},
+{id:"santos-demo",nome:"Equipamento Santos FC",defKz:52000,defEur:40},
+{id:"palmeiras-demo",nome:"Equipamento Palmeiras",defKz:52000,defEur:40},
+{id:"corinthians-demo",nome:"Equipamento Corinthians",defKz:52000,defEur:40},
+{id:"saopaulo-demo",nome:"Equipamento São Paulo",defKz:52000,defEur:40},
+{id:"fluminense-demo",nome:"Equipamento Fluminense",defKz:52000,defEur:40},
+{id:"internacional-demo",nome:"Equipamento Internacional",defKz:52000,defEur:40},
+{id:"botafogo-demo",nome:"Equipamento Botafogo",defKz:52000,defEur:40},
+{id:"vasco-demo",nome:"Equipamento Vasco da Gama",defKz:52000,defEur:40},
+{id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},
+{id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},
+{id:"ysl-demo",nome:"Yves Saint Laurent Libre",defKz:32000,defEur:50},
+{id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},
+{id:"zara-demo",nome:"Perfume Zara",defKz:18000,defEur:29}
+];
+
+function login(){msg.innerText="";auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.code+" - "+e.message)}
 function logout(){auth.signOut()}
-auth.onAuthStateChanged(u=>{if(u){loginBox.style.display="none";panel.style.display="block";carregar()}else{loginBox.style.display="block";panel.style.display="none"}})
+auth.onAuthStateChanged(u=>{loginBox.style.display=u?'none':'block';panel.style.display=u?'block':'none';if(u)carregar()})
+
 function carregar(){
- lista.innerHTML="Carregando produtos...";
- db.ref("produtos").once("value").then(s=>{
-   if(!s.exists()){lista.innerHTML="<p>Nenhum produto no Firebase. Abre o teu site principal uma vez.</p>";return}
-   lista.innerHTML=""; s.forEach(c=>{
-     const id=c.key; const p=c.val();
-     lista.innerHTML+=`<div class="item"><b>${p.nome||id}</b><br><br><div style="display:flex;gap:10px"><input id="kz_${id}" type="number" value="${p.precoKz||0}"><input id="eur_${id}" type="number" value="${p.precoEUR||0}"></div><br><button onclick="salvar('${id}')">Salvar ${p.nome||id}</button></div>`
-   })
- }).catch(e=>{lista.innerHTML="Erro: "+e.message})
+ lista.innerHTML="A carregar preços...";
+ db.ref("produtos").once("value",snap=>{
+   const dados={}; if(snap.exists()) snap.forEach(c=>dados[c.key]=c.val());
+   lista.innerHTML="";
+   demoProducts.forEach(p=>{
+     const fb=dados[p.id]||{};
+     const kz=fb.precoKz!=null?fb.precoKz:p.defKz;
+     const eur=fb.precoEUR!=null?fb.precoEUR:p.defEur;
+     lista.innerHTML+=`<div class="item"><b>${p.nome}<small style="color:#888"> (${p.id})</small></b>
+       <div><label>Kz</label><input id="kz_${p.id}" type="number" value="${kz}"></div>
+       <div><label>EUR €</label><input id="eur_${p.id}" type="number" value="${eur}"></div>
+       <div><label>&nbsp;</label><button onclick="salvar('${p.id}')">Salvar</button></div></div>`;
+   });
+ }).catch(e=>lista.innerHTML="Erro: "+e.message);
 }
-function salvar(id){db.ref("produtos/"+id).update({precoKz:Number(document.getElementById("kz_"+id).value),precoEUR:Number(document.getElementById("eur_"+id).value)}).then(()=>alert("Salvo "+id))}
-</script></body></html>
+
+function salvar(id){
+ const kz=Number(document.getElementById("kz_"+id).value);
+ const eur=Number(document.getElementById("eur_"+id).value);
+ db.ref("produtos/"+id).set({precoKz:kz,precoEUR:eur}).then(()=>{alert("Preço salvo! "+id+" -> Kz "+kz+" / € "+eur)}).catch(e=>alert(e.message));
+}
+</script>
+</body>
+</html>
