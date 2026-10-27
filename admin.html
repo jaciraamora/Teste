@@ -1,31 +1,26 @@
 <!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Orkap</title>
-<style>
-body{font-family:Arial;background:#eef3f8;margin:0;padding:16px}
-.box{max-width:900px;margin:0 auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-h3{font-size:22px;margin:0 0 16px}
-input{padding:14px 12px;border:1px solid #d0d9e4;border-radius:10px;font-size:16px;width:100%;box-sizing:border-box}
-button{padding:12px 18px;border:none;border-radius:10px;background:#2f6eae;color:#fff;font-weight:800;font-size:15px;cursor:pointer}
-.row{display:flex;flex-direction:column;gap:14px;margin-top:16px}
-.item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.item b{font-size:17px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{font-size:12px;font-weight:800;color:#5a738e;margin-bottom:4px;display:block}
-@media(min-width:600px){.item{flex-direction:row;align-items:center;justify-content:space-between}.grid2{width:340px}}
-</style>
+<style>body{font-family:Arial;background:#eef3f8;padding:16px} .box{max-width:900px;margin:20px auto;background:#fff;padding:24px;border-radius:16px} input{padding:14px;border:1px solid #ccc;border-radius:10px;width:100%;box-sizing:border-box;font-size:16px} button{padding:14px 20px;background:#2f6eae;color:#fff;border:none;border-radius:10px;font-weight:800;font-size:16px;width:100%;cursor:pointer} .item{border:1px solid #e2e8f0;padding:16px;border-radius:12px;margin-top:12px}</style>
 </head><body>
-<div class="box" id="loginBox"><h3>Adminstração da loja Orkap</h3><input id="email" type="email" placeholder="Email"><br><br><input id="pass" type="password" placeholder="Senha"><br><br><button onclick="login()" style="width:100%">Entrar</button><p id="msg" style="color:red"></p></div>
-
-<div class="box" id="panel" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3>Preços Orkap</h3><button onclick="logout()" style="background:#c0392b">Sair</button></div>
-<div class="row" id="lista"></div>
-</div>
+<div class="box" id="loginBox"><h3>Admin Orkap</h3><input id="email" placeholder="Email"><br><br><input id="pass" type="password" placeholder="Senha"><br><br><button onclick="login()">Entrar</button><p id="msg" style="color:red;margin-top:10px"></p><p id="debug" style="font-size:11px;color:#888"></p></div>
+<div class="box" id="panel" style="display:none"><h3>Preços</h3><button onclick="logout()" style="background:#c0392b">Sair</button><div id="lista" style="margin-top:15px"></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 const firebaseConfig={apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",authDomain:"orkap-d13c6.firebaseapp.com",databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",projectId:"orkap-d13c6",storageBucket:"orkap-d13c6.firebasestorage.app",messagingSenderId:"571248205991",appId:"1:571248205991:web:65dca626cee2be2f74fb82"};
-firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
-function login(){auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.message)}function logout(){auth.signOut()}
-auth.onAuthStateChanged(u=>{loginBox.style.display=u?'none':'block';panel.style.display=u?'block':'none';if(u)carregar()})
-function carregar(){lista.innerHTML="Carregando...";db.ref("produtos").once("value",s=>{lista.innerHTML="";s.forEach(c=>{const id=c.key;const p=c.val();lista.innerHTML+=`<div class="item"><b>${p.nome||id}</b><div class="grid2"><div><label>PREÇO KZ</label><input id="kz_${id}" type="number" value="${p.precoKz||0}"></div><div><label>PREÇO €</label><input id="eur_${id}" type="number" value="${p.precoEUR||0}"></div></div><button onclick="salvar('${id}')">Salvar</button></div>`})})}
-function salvar(id){db.ref("produtos/"+id).update({precoKz:Number(document.getElementById("kz_"+id).value),precoEUR:Number(document.getElementById("eur_"+id).value)}).then(()=>{const b=event.target;b.innerText="✓ Salvo";setTimeout(()=>b.innerText="Salvar",1000)})}
+try{firebase.initializeApp(firebaseConfig);document.getElementById("debug").innerText="Firebase OK"}catch(e){document.getElementById("debug").innerText=e.message}
+const db=firebase.database();const auth=firebase.auth();
+function login(){msg.innerText="A entrar...";auth.signInWithEmailAndPassword(document.getElementById("email").value,document.getElementById("pass").value).then(()=>{msg.innerText=""}).catch(e=>{msg.innerText=e.code+" : "+e.message})}
+function logout(){auth.signOut()}
+auth.onAuthStateChanged(u=>{if(u){loginBox.style.display="none";panel.style.display="block";carregar()}else{loginBox.style.display="block";panel.style.display="none"}})
+function carregar(){
+ lista.innerHTML="Carregando produtos...";
+ db.ref("produtos").once("value").then(s=>{
+   if(!s.exists()){lista.innerHTML="<p>Nenhum produto no Firebase. Abre o teu site principal uma vez.</p>";return}
+   lista.innerHTML=""; s.forEach(c=>{
+     const id=c.key; const p=c.val();
+     lista.innerHTML+=`<div class="item"><b>${p.nome||id}</b><br><br><div style="display:flex;gap:10px"><input id="kz_${id}" type="number" value="${p.precoKz||0}"><input id="eur_${id}" type="number" value="${p.precoEUR||0}"></div><br><button onclick="salvar('${id}')">Salvar ${p.nome||id}</button></div>`
+   })
+ }).catch(e=>{lista.innerHTML="Erro: "+e.message})
+}
+function salvar(id){db.ref("produtos/"+id).update({precoKz:Number(document.getElementById("kz_"+id).value),precoEUR:Number(document.getElementById("eur_"+id).value)}).then(()=>alert("Salvo "+id))}
 </script></body></html>
