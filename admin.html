@@ -30,7 +30,7 @@
 <div class="search" id="sBox"><input id="q" placeholder="Pesquisar..." oninput="render()"></div>
 <div class="list" id="lista"></div>
 <div id="cfgArea" class="hidden cfg">
-<div class="cfg-card"><h4>Percentagem Personalizada</h4><label>% EXTRA (ex: 25 = +25%)</label><input id="cfgPerc" type="number" min="0" max="100" oninput="onPercChange()"><div id="cfgEx" style="font-size:11px;margin-top:8px;color:#2f6eae;background:#eef4ff;padding:8px;border-radius:8px"></div><button class="btn" style="margin-top:10px;width:100%" onclick="saveCfg()">Salvar Percentagem</button><p style="font-size:11px;color:#8aa0b8;margin-top:8px">Ex: Se Benfica custa 52.000 Kz e % = 25, a personalizada fica 65.000 Kz automaticamente.</p></div>
+<div class="cfg-card"><h4>Percentagem Personalizada</h4><label>% EXTRA (+25%)</label><input id="cfgPerc" type="number" min="0" max="100" oninput="onPercChange()"><div id="cfgEx" style="font-size:11px;margin-top:8px;color:#2f6eae;background:#eef4ff;padding:8px;border-radius:8px"></div><button class="btn" style="margin-top:10px;width:100%" onclick="saveCfg()">Salvar Percentagem</button></div>
 </div>
 </div>
 
@@ -81,8 +81,8 @@ function render(){
   const persEur=(pr.eur*(1+perc/100)).toFixed(2);
   const isEquip=tab==='equip';
   return `<div class="card"><b>${p.nome}<small> ${p.id}</small></b>
-  <div><label>KZ Normal</label><input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')"></div>
-  <div><label>EUR Normal</label><input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')"></div>
+  <div><label>KZ </label><input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')"></div>
+  <div><label>EUR </label><input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')"></div>
   <div><label>&nbsp;</label><button class="btn" onclick="save('${p.id}')">Salvar</button></div>
   ${isEquip?`<div class="pers"><span>Personalizada (+${perc}%):</span><strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong></div>`:`<div class="pers"><span>Perfume - preço único</span><strong>—</strong></div>`}
   </div>`;
@@ -111,4 +111,4 @@ function saveCfg(){
  const p=Number(cfgPerc.value);
  db.ref('config').update({personalizadoPercent:p}).then(()=>{alert(`Percentagem salva: +${p}% . O site principal já vai calcular personalizada = normal + ${p}%`);});
 }
-</script></body></html>
+</script></body></html> 
