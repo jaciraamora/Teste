@@ -1529,10 +1529,7 @@ footer {
             condições com a Orkap.
         </div>
 
-        <div class="cart-total-line">
-            <span>Subtotal</span>
-            <span id="cartSubtotal">0 Kz</span>
-        </div>
+      
 
         <div class="cart-total-line total">
             <span>Total</span>
@@ -2449,6 +2446,11 @@ function updateCustomPrice() {
         label + " — " +
         priceKz.toLocaleString("pt-PT") + " Kz / " +
         priceEUR.toLocaleString("pt-PT") + " €";
+
+    const personalizadoOption = document.querySelector('#equipmentType option[value="personalizado"]');
+    if(personalizadoOption){
+        personalizadoOption.textContent = `Camisola personalizada (+${personalizadoPercent}%)`;
+    }
 }
 
 /* ADICIONAR CLUBE ESCOLHIDO AO CARRINHO */
@@ -2465,7 +2467,7 @@ function addSelectedClub() {
         personalizado: "Camisola personalizada"
     };
 
-    const multiplier = type === "personalizado" ? 1.20 : 1;
+    const multiplier = type === "personalizado" ? (1 + personalizadoPercent/100) : 1;
 
     const product = {
         id: "custom-" + country + "-" + club + "-" + type,
@@ -2720,9 +2722,7 @@ function checkout() {
     const total = items.reduce(
         (sum, item) => sum + item.lineTotal, 0
     );
-	
-        
-   
+      const deposit = total;
 
     let message = "Olá Orkap! Gostaria de fazer uma encomenda.\n\n";
 
@@ -2773,7 +2773,9 @@ function checkout() {
 }
 
 function contactWhatsApp() {
-
+       
+	
+	
     const message = encodeURIComponent(
         "Olá Orkap! Gostaria de consultar os produtos disponíveis."
     );
@@ -2830,8 +2832,9 @@ if (database) {
 
 updateClubOptions();
 updateCustomPrice();
+renderProducts(); // <- ADICIONA ESTA LINHA
 
 </script>
 
 </body>
-</html>
+</html> 
