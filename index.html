@@ -2184,9 +2184,9 @@ const clubsByCountry = {
 
 /* PREÇOS DE REFERÊNCIA DOS EQUIPAMENTOS */
 
-
-const equipmentBaseEUR = 40;
-const equipmentBaseKz = 52000;
+let equipmentBaseEUR = 40;
+let equipmentBaseKz = 52000;
+let personalizadoPercent = 25;
 
 /* FORMATAÇÃO DE PREÇOS */
 
@@ -2434,7 +2434,7 @@ function updateClubOptions() {
 function updateCustomPrice() {
 
     const type = document.getElementById("equipmentType").value;
-    const multiplier = type === "personalizado" ? 1.20 : 1;
+    const multiplier = type === "personalizado" ? (1 + personalizadoPercent/100) : 1;
 
     const priceKz = equipmentBaseKz * multiplier;
     const priceEUR = equipmentBaseEUR * multiplier;
@@ -2443,7 +2443,7 @@ function updateCustomPrice() {
         ? "Equipamento normal"
         : type === "treino"
             ? "Equipamento de treino"
-            : "Camisola personalizada (+25%)";
+            : `Camisola personalizada (+${personalizadoPercent}%)`;
 
     document.getElementById("customPrice").textContent =
         label + " — " +
@@ -2604,8 +2604,7 @@ function updateCart() {
         (sum, item) => sum + item.lineTotal, 0
     );
 
-    const deposit = total * 0.60;
-    const remaining = total * 0.40;
+    const deposit = total;
 
     document.getElementById("cartCount").textContent = count;
 
@@ -2721,9 +2720,9 @@ function checkout() {
     const total = items.reduce(
         (sum, item) => sum + item.lineTotal, 0
     );
-
-    const deposit = total * 0.60;
-    const remaining = total * 0.40;
+	
+        
+   
 
     let message = "Olá Orkap! Gostaria de fazer uma encomenda.\n\n";
 
@@ -2762,8 +2761,7 @@ function checkout() {
     message += "\n*RESUMO DO PAGAMENTO*\n";
     message += "Moeda: " + currentCurrency + "\n";
     message += "Total: " + formatMoney(total) + "\n";
-    message += "Pagamento inicial (60%): " + formatMoney(deposit) + "\n";
-    message += "Restante (40%): " + formatMoney(remaining) + "\n\n";
+    message += "Pagamento integral (100%): " + formatMoney(deposit) + "\n\n";
 
     message += "*Entrega:* prazo previsto de até 7 dias, sujeito a confirmação.\n";
     message += "Por favor, confirmem a disponibilidade, os modelos, o prazo e as condições de pagamento antes de eu efetuar o pagamento.";
@@ -2788,14 +2786,14 @@ function contactWhatsApp() {
 
 /* FIREBASE: CATÁLOGO DINÂMICO */
 
-// FIREBASE SÓ MUDA PREÇO - não cria produtos, não muda nome
+// FIREBASE SÓ PREÇO + % 
 if (database) {
+    // 1. Preços dos produtos (só precoKz e precoEUR)
     database.ref("produtos").on("value", snapshot => {
         const dados = {};
         if (snapshot.exists()) {
             snapshot.forEach(c => { dados[c.key] = c.val(); });
         }
-
         products = applyHtmlProductImages(demoProducts.map(demo => {
             const fb = dados[demo.id];
             if (fb) {
@@ -2807,15 +2805,25 @@ if (database) {
             }
             return demo;
         }));
-
         renderProducts();
-    }, () => {
-        products = applyHtmlProductImages([...demoProducts]);
-        renderProducts();
+        updateCustomPrice();
     });
+
+    // 2. AQUI É ONDE ENTRA O CÓDIGO DA PERCENTAGEM
+    database.ref("config").on("value", snap=>{
+      if(snap.exists()){
+        const c = snap.val();
+        equipmentBaseKz = Number(c.baseKz) || 52000;
+        equipmentBaseEUR = Number(c.baseEur || c.baseEUR) || 40;
+        personalizadoPercent = Number(c.personalizadoPercent) || 25;
+        updateCustomPrice();
+      }
+    });
+
 } else {
     renderProducts();
 }
+
 
 
 /* INICIAR SELEÇÃO DE CLUBES */
