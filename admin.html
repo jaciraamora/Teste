@@ -84,9 +84,9 @@ function render(){
   <div><label>KZ </label><input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')"></div>
   <div><label>EUR </label><input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')"></div>
   <div><label>&nbsp;</label><button class="btn" onclick="save('${p.id}')">Salvar</button></div>
-  ${isEquip?`<div class="pers"><span>Personalizada (+${perc}%):</span><strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong></div>`:`}
+  ${isEquip?`<div class="pers"><span>Personalizada (+${perc}%):</span><strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong></div>`:`<div class="pers"><span>Perfume</span><strong>—</strong></div>`}
   </div>`;
- }).join('');
+ }).join(''); 
 }
 
 function livePers(id){
