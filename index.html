@@ -1363,7 +1363,7 @@ footer {
 <header>
     <div class="header-content">
 
-        <a href="#inicio" class="brand">
+        <a href="#inicio" class="brand" id="orkapSecretAccess">
             <img src="perfil.png" alt="Orkap" class="profile-photo">
 
             <div>
@@ -1391,47 +1391,64 @@ footer {
                 🛒 <span class="cart-count" id="cartCount">0</span>
             </button>
 
-            <!-- ACESSO DISCRETO AO MENU -->
-            <button class="orkap-menu-button"
-                    onclick="toggleOrkapMenu()"
-                    aria-label="Abrir menu"
-                    aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
         </div>
     </div>
 </header>
 
-<!-- MENU LATERAL -->
-<div class="orkap-menu-overlay" id="orkapOverlay" onclick="closeOrkapMenu()"></div>
+<script>
+(function(){
 
-<aside class="orkap-side-menu" id="orkapSideMenu">
+    const brand = document.getElementById('orkapSecretAccess');
 
-    <div class="orkap-menu-header">
-        <span>Orkap Console</span>
+    let pressTimer;
+    let longPress = false;
+    let clicks = 0;
+    let clickTimer;
 
-        <button onclick="closeOrkapMenu()" aria-label="Fechar menu">
-            &times;
-        </button>
-    </div>
+    brand.addEventListener('pointerdown', function(){
+        longPress = false;
 
-    <div class="orkap-menu-content">
+        pressTimer = setTimeout(function(){
+            longPress = true;
+            window.location.href = '/admin.html';
+        }, 3000);
+    });
 
-       <a href="/admin.html" class="orkap-admin-link">
-            <span>↗</span>
-            Entrar
-        </a>
+    function cancelPress(){
+        clearTimeout(pressTimer);
+    }
 
-    </div>
+    brand.addEventListener('pointerup', cancelPress);
+    brand.addEventListener('pointerleave', cancelPress);
+    brand.addEventListener('pointercancel', cancelPress);
 
-    <div class="orkap-menu-footer">
-        Orkap · Área reservada
-    </div>
+    brand.addEventListener('click', function(e){
 
-</aside>
+        if(longPress){
+            e.preventDefault();
+            longPress = false;
+            return;
+        }
+
+        clicks++;
+
+        clearTimeout(clickTimer);
+
+        if(clicks >= 5){
+            e.preventDefault();
+            window.location.href = '/admin.html';
+            clicks = 0;
+            return;
+        }
+
+        clickTimer = setTimeout(function(){
+            clicks = 0;
+        }, 2000);
+
+    });
+
+})();
+</script>
 
 <main>
 
