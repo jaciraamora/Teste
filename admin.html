@@ -1,16 +1,26 @@
-<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Painel Administrativo da Orkap</title>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel Administrativo da Orkap</title>
+
 <style>
-*{box-sizing:border-box}body{font-family:Inter,Arial;background:#f6f8fb;margin:0;color:#1a2b40}
+*{box-sizing:border-box}
+body{font-family:Inter,Arial;background:#f6f8fb;margin:0;color:#1a2b40}
 .top{max-width:600px;margin:0 auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;color:#2f6eae} .logo small{display:block;font-weight:400;color:#8aa0b8;font-size:10px}
+.logo{font-weight:900;color:#2f6eae}
+.logo small{display:block;font-weight:400;color:#8aa0b8;font-size:10px}
 .box{max-width:600px;margin:0 auto 20px;background:#fff;border-radius:18px;box-shadow:0 8px 30px rgba(20,40,70,.06);border:1px solid #e9eef5;overflow:hidden}
-.tabs{display:flex;gap:6px;padding:10px;background:#f8fafd;border-bottom:1px solid #eef2f7}
-.tab{flex:1;padding:11px;border-radius:10px;border:1px solid #d9e3f0;background:#fff;font-weight:700;font-size:11px;color:#4a6a8a;cursor:pointer}
+.tabs{display:flex;gap:6px;padding:10px;background:#f8fafd;border-bottom:1px solid #eef2f7;overflow-x:auto}
+.tab{flex:1;min-width:max-content;padding:11px;border-radius:10px;border:1px solid #d9e3f0;background:#fff;font-weight:700;font-size:11px;color:#4a6a8a;cursor:pointer}
 .tab.active{background:#2f6eae;color:#fff;border-color:#2f6eae}
-.search{padding:10px} .search input{width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0}
+.search{padding:10px}
+.search input{width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0}
 .list{padding:0 10px 14px;display:grid;gap:10px}
 .card{border:1px solid #eaf0f8;border-radius:14px;padding:12px;background:#fff;display:grid;grid-template-columns:1fr 88px 78px 68px;gap:8px;align-items:end}
-.card b{grid-column:1/-1;font-size:13px} .card small{color:#8aa0b8;font-weight:400}
+.card b{grid-column:1/-1;font-size:13px}
+.card small{color:#8aa0b8;font-weight:400}
 .card label{font-size:9px;color:#8aa0b8;font-weight:700;text-transform:uppercase;display:block;margin-bottom:3px}
 .card input{padding:9px;border-radius:8px;border:1px solid #d9e3f0;width:100%}
 .pers{grid-column:1/-1;background:#f4f8ff;border:1px dashed #c9d9f0;border-radius:8px;padding:7px 10px;font-size:11px;color:#2f6eae;display:flex;justify-content:space-between}
@@ -20,95 +30,456 @@
 .cfg-card{border:1px solid #eaf0f8;border-radius:12px;padding:14px;background:#fbfdff}
 .cfg-card h4{margin:0 0 8px;font-size:12px;color:#2f6eae}
 .hidden{display:none}
-@media(max-width:600px){.card{grid-template-columns:1fr 1fr} .card b{grid-column:1/-1}}
-</style></head><body>
-<div class="top"><div class="logo">ADMISTRAÇÃO DA LOJA ORKAP</small></div><button id="btnOut" class="btn btn-ghost hidden" onclick="logout()">Sair</button></div>
-<div class="box" id="loginBox" style="padding:30px 18px"><h3>Entrar</h3><input id="email" placeholder="Email" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px"><input id="pass" type="password" placeholder="Senha" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px"><button class="btn" style="width:100%" onclick="login()">Entrar</button><p id="msg" style="color:red;font-size:12px"></p></div>
+
+.orders{padding:12px;display:grid;gap:12px}
+.order{border:1px solid #e5ebf2;border-radius:14px;padding:14px;background:#fff}
+.order-head{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #eef2f7;padding-bottom:10px}
+.order-number{font-weight:900;color:#2f6eae;font-size:13px}
+.order-date{font-size:10px;color:#8aa0b8;margin-top:4px}
+.order-section{padding:10px 0;border-bottom:1px solid #eef2f7}
+.order-section:last-child{border-bottom:0}
+.order-section h4{margin:0 0 7px;font-size:11px;color:#2f6eae;text-transform:uppercase}
+.order-info{font-size:12px;line-height:1.8;color:#40546a;overflow-wrap:anywhere}
+.order-products{display:grid;gap:7px}
+.order-product{background:#f6f8fb;padding:9px;border-radius:9px;font-size:12px;line-height:1.6}
+.order-total{font-weight:900;color:#2f6eae;font-size:16px}
+.order-status{width:100%;padding:10px;border:1px solid #d9e3f0;border-radius:9px;background:#fff;color:#2f6eae;font-weight:700;margin-top:7px}
+.empty-orders{text-align:center;padding:35px 15px;color:#8aa0b8;font-size:13px}
+.order-count{background:#eaf2fc;color:#2f6eae;padding:3px 8px;border-radius:20px;font-size:10px;margin-left:4px}
+
+@media(max-width:600px){
+.card{grid-template-columns:1fr 1fr}
+.card b{grid-column:1/-1}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+<div class="logo">ADMISTRAÇÃO DA LOJA ORKAP</div>
+<button id="btnOut" class="btn btn-ghost hidden" onclick="logout()">Sair</button>
+</div>
+
+<div class="box" id="loginBox" style="padding:30px 18px">
+<h3>Entrar</h3>
+<input id="email" placeholder="Email" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px">
+<input id="pass" type="password" placeholder="Senha" style="width:100%;padding:11px;border-radius:10px;border:1px solid #d9e3f0;margin-bottom:8px">
+<button class="btn" style="width:100%" onclick="login()">Entrar</button>
+<p id="msg" style="color:red;font-size:12px"></p>
+</div>
 
 <div class="box hidden" id="panel">
-<div class="tabs"><button class="tab active" id="tEquip" onclick="setTab('equip')">EQUIPAMENTOS</button><button class="tab" id="tPerf" onclick="setTab('perf')">PERFUMES</button><button class="tab" id="tCfg" onclick="setTab('cfg')">CONFIG %</button></div>
-<div class="search" id="sBox"><input id="q" placeholder="Pesquisar..." oninput="render()"></div>
-<div class="list" id="lista"></div>
+
+<div class="tabs">
+<button class="tab active" id="tOrders" onclick="setTab('orders')">ENCOMENDAS <span id="orderCount" class="order-count">0</span></button>
+<button class="tab" id="tEquip" onclick="setTab('equip')">EQUIPAMENTOS</button>
+<button class="tab" id="tPerf" onclick="setTab('perf')">PERFUMES</button>
+<button class="tab" id="tCfg" onclick="setTab('cfg')">CONFIG %</button>
+</div>
+
+<div class="search hidden" id="sBox">
+<input id="q" placeholder="Pesquisar..." oninput="render()">
+</div>
+
+<div class="list hidden" id="lista"></div>
+
+<div id="ordersArea" class="orders"></div>
+
 <div id="cfgArea" class="hidden cfg">
-<div class="cfg-card"><h4>Percentagem Personalizada</h4><label>% EXTRA (+25%)</label><input id="cfgPerc" type="number" min="0" max="100" oninput="onPercChange()"><div id="cfgEx" style="font-size:11px;margin-top:8px;color:#2f6eae;background:#eef4ff;padding:8px;border-radius:8px"></div><button class="btn" style="margin-top:10px;width:100%" onclick="saveCfg()">Salvar Percentagem</button></div>
+<div class="cfg-card">
+<h4>Percentagem Personalizada</h4>
+<label>% EXTRA (+25%)</label>
+<input id="cfgPerc" type="number" min="0" max="100" oninput="onPercChange()">
+<div id="cfgEx" style="font-size:11px;margin-top:8px;color:#2f6eae;background:#eef4ff;padding:8px;border-radius:8px"></div>
+<button class="btn" style="margin-top:10px;width:100%" onclick="saveCfg()">Salvar Percentagem</button>
 </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
 <script>
-const firebaseConfig={apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",authDomain:"orkap-d13c6.firebaseapp.com",databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",projectId:"orkap-d13c6",storageBucket:"orkap-d13c6.firebasestorage.app",messagingSenderId:"571248205991",appId:"1:571248205991:web:65dca626cee2be2f74fb82"};
-firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
+
+const firebaseConfig={
+apiKey:"AIzaSyAiQo9h8luDPyLLuPHKauiFFxib7xoumRQ",
+authDomain:"orkap-d13c6.firebaseapp.com",
+databaseURL:"https://orkap-d13c6-default-rtdb.firebaseio.com",
+projectId:"orkap-d13c6",
+storageBucket:"orkap-d13c6.firebasestorage.app",
+messagingSenderId:"571248205991",
+appId:"1:571248205991:web:65dca626cee2be2f74fb82"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db=firebase.database();
+const auth=firebase.auth();
 
 const demoEquip=[
-{id:"rm-demo",nome:"Real Madrid",defKz:52000,defEur:40},{id:"barca-demo",nome:"Barcelona",defKz:52000,defEur:40},{id:"benfica-demo",nome:"Benfica",defKz:52000,defEur:40},{id:"sporting-demo",nome:"Sporting",defKz:52000,defEur:40},{id:"porto-demo",nome:"FC Porto",defKz:52000,defEur:40},{id:"bayern-demo",nome:"Bayern",defKz:52000,defEur:40},{id:"city-demo",nome:"Man City",defKz:52000,defEur:40},{id:"united-demo",nome:"Man United",defKz:52000,defEur:40},{id:"liverpool-demo",nome:"Liverpool",defKz:52000,defEur:40},{id:"arsenal-demo",nome:"Arsenal",defKz:52000,defEur:40},{id:"psg-demo",nome:"PSG",defKz:52000,defEur:40},{id:"milan-demo",nome:"AC Milan",defKz:52000,defEur:40},{id:"juventus-demo",nome:"Juventus",defKz:52000,defEur:40},{id:"inter-demo",nome:"Inter",defKz:52000,defEur:40},{id:"flamengo-demo",nome:"Flamengo",defKz:52000,defEur:40},{id:"santos-demo",nome:"Santos FC",defKz:52000,defEur:40},{id:"palmeiras-demo",nome:"Palmeiras",defKz:52000,defEur:40},{id:"corinthians-demo",nome:"Corinthians",defKz:52000,defEur:40},{id:"saopaulo-demo",nome:"São Paulo",defKz:52000,defEur:40},{id:"fluminense-demo",nome:"Fluminense",defKz:52000,defEur:40},{id:"internacional-demo",nome:"Internacional",defKz:52000,defEur:40},{id:"botafogo-demo",nome:"Botafogo",defKz:52000,defEur:40},{id:"vasco-demo",nome:"Vasco",defKz:52000,defEur:40}
-];
-const demoPerf=[
-{id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},{id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},{id:"ysl-demo",nome:"YSL Libre",defKz:32000,defEur:50},{id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},{id:"zara-demo",nome:"Zara",defKz:18000,defEur:29}
+{id:"rm-demo",nome:"Real Madrid",defKz:52000,defEur:40},
+{id:"barca-demo",nome:"Barcelona",defKz:52000,defEur:40},
+{id:"benfica-demo",nome:"Benfica",defKz:52000,defEur:40},
+{id:"sporting-demo",nome:"Sporting",defKz:52000,defEur:40},
+{id:"porto-demo",nome:"FC Porto",defKz:52000,defEur:40},
+{id:"bayern-demo",nome:"Bayern",defKz:52000,defEur:40},
+{id:"city-demo",nome:"Man City",defKz:52000,defEur:40},
+{id:"united-demo",nome:"Man United",defKz:52000,defEur:40},
+{id:"liverpool-demo",nome:"Liverpool",defKz:52000,defEur:40},
+{id:"arsenal-demo",nome:"Arsenal",defKz:52000,defEur:40},
+{id:"psg-demo",nome:"PSG",defKz:52000,defEur:40},
+{id:"milan-demo",nome:"AC Milan",defKz:52000,defEur:40},
+{id:"juventus-demo",nome:"Juventus",defKz:52000,defEur:40},
+{id:"inter-demo",nome:"Inter",defKz:52000,defEur:40},
+{id:"flamengo-demo",nome:"Flamengo",defKz:52000,defEur:40},
+{id:"santos-demo",nome:"Santos FC",defKz:52000,defEur:40},
+{id:"palmeiras-demo",nome:"Palmeiras",defKz:52000,defEur:40},
+{id:"corinthians-demo",nome:"Corinthians",defKz:52000,defEur:40},
+{id:"saopaulo-demo",nome:"São Paulo",defKz:52000,defEur:40},
+{id:"fluminense-demo",nome:"Fluminense",defKz:52000,defEur:40},
+{id:"internacional-demo",nome:"Internacional",defKz:52000,defEur:40},
+{id:"botafogo-demo",nome:"Botafogo",defKz:52000,defEur:40},
+{id:"vasco-demo",nome:"Vasco",defKz:52000,defEur:40}
 ];
 
-let tab='equip'; let dados={}; let perc=25;
-function login(){auth.signInWithEmailAndPassword(email.value,pass.value).catch(e=>msg.innerText=e.message)}
-function logout(){auth.signOut()}
-auth.onAuthStateChanged(u=>{loginBox.classList.toggle('hidden',!!u);panel.classList.toggle('hidden',!u);btnOut.classList.toggle('hidden',!u);if(u)load()})
+const demoPerf=[
+{id:"sauvage-demo",nome:"Dior Sauvage",defKz:30000,defEur:48},
+{id:"rabanne-demo",nome:"Paco Rabanne",defKz:35000,defEur:55},
+{id:"ysl-demo",nome:"YSL Libre",defKz:32000,defEur:50},
+{id:"dolce-demo",nome:"Dolce Gabbana",defKz:30000,defEur:48},
+{id:"zara-demo",nome:"Zara",defKz:18000,defEur:29}
+];
+
+let tab='orders';
+let dados={};
+let perc=25;
+let encomendas={};
+let ordersRef=null;
+
+function login(){
+auth.signInWithEmailAndPassword(email.value,pass.value)
+.catch(e=>msg.innerText=e.message);
+}
+
+function logout(){
+if(ordersRef){
+ordersRef.off();
+ordersRef=null;
+}
+auth.signOut();
+}
+
+auth.onAuthStateChanged(u=>{
+loginBox.classList.toggle('hidden',!!u);
+panel.classList.toggle('hidden',!u);
+btnOut.classList.toggle('hidden',!u);
+
+if(u){
+load();
+listenOrders();
+}else{
+if(ordersRef){
+ordersRef.off();
+ordersRef=null;
+}
+}
+});
 
 function load(){
- db.ref().once('value',s=>{
-  const all=s.val()||{}; dados=all.produtos||{}; const cfg=all.config||{};
-  perc=cfg.personalizadoPercent!=null?cfg.personalizadoPercent:25;
-  cfgPerc.value=perc; onPercChange(); render();
- });
+db.ref().once('value',s=>{
+const all=s.val()||{};
+dados=all.produtos||{};
+const cfg=all.config||{};
+perc=cfg.personalizadoPercent!=null?cfg.personalizadoPercent:25;
+cfgPerc.value=perc;
+onPercChange();
+render();
+});
 }
-function setTab(t){tab=t; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); document.getElementById(t==='equip'?'tEquip':t==='perf'?'tPerf':'tCfg').classList.add('active'); sBox.classList.toggle('hidden',t==='cfg'); lista.classList.toggle('hidden',t==='cfg'); cfgArea.classList.toggle('hidden',t!=='cfg'); render();}
+
+function setTab(t){
+tab=t;
+
+document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+
+const ids={
+orders:'tOrders',
+equip:'tEquip',
+perf:'tPerf',
+cfg:'tCfg'
+};
+
+document.getElementById(ids[t]).classList.add('active');
+
+sBox.classList.toggle('hidden',t==='cfg'||t==='orders');
+lista.classList.toggle('hidden',t==='cfg'||t==='orders');
+ordersArea.classList.toggle('hidden',t!=='orders');
+cfgArea.classList.toggle('hidden',t!=='cfg');
+
+render();
+
+if(t==='orders') renderOrders();
+}
 
 function getPriceObj(id,defKz,defEur){
- const fb=dados[id]||{};
- return {kz: fb.precoKz!=null?Number(fb.precoKz):defKz, eur: fb.precoEUR!=null?Number(fb.precoEUR):defEur};
+const fb=dados[id]||{};
+return{
+kz:fb.precoKz!=null?Number(fb.precoKz):defKz,
+eur:fb.precoEUR!=null?Number(fb.precoEUR):defEur
+};
 }
+
 function onPercChange(){
- perc=Number(cfgPerc.value)||0;
- cfgEx.innerText=`Exemplo: 52.000 Kz + ${perc}% = ${Math.round(52000*(1+perc/100)).toLocaleString('pt-PT')} Kz | 40€ + ${perc}% = ${(40*(1+perc/100)).toFixed(2)}€`;
- render();
+perc=Number(cfgPerc.value)||0;
+
+cfgEx.innerText=
+`Exemplo: 52.000 Kz + ${perc}% = ${Math.round(52000*(1+perc/100)).toLocaleString('pt-PT')} Kz | 40€ + ${perc}% = ${(40*(1+perc/100)).toFixed(2)}€`;
+
+render();
 }
 
 function render(){
- const q=(document.getElementById('q').value||'').toLowerCase();
- let itens=tab==='equip'?demoEquip:demoPerf;
- if(tab!=='cfg' && q) itens=itens.filter(p=>p.nome.toLowerCase().includes(q));
- if(tab==='cfg') return;
- lista.innerHTML=itens.map(p=>{
-  const pr=getPriceObj(p.id,p.defKz,p.defEur);
-  const persKz=Math.round(pr.kz*(1+perc/100));
-  const persEur=(pr.eur*(1+perc/100)).toFixed(2);
-  const isEquip=tab==='equip';
-  return `<div class="card"><b>${p.nome}<small> ${p.id}</small></b>
-  <div><label>KZ </label><input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')"></div>
-  <div><label>EUR </label><input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')"></div>
-  <div><label>&nbsp;</label><button class="btn" onclick="save('${p.id}')">Salvar</button></div>
-  ${isEquip?`<div class="pers"><span>Personalizada (+${perc}%):</span><strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong></div>`:`<div class="pers"><span>Perfume</span><strong>—</strong></div>`}
-  </div>`;
- }).join(''); 
+if(tab==='cfg'||tab==='orders')return;
+
+const q=(document.getElementById('q').value||'').toLowerCase();
+
+let itens=tab==='equip'?demoEquip:demoPerf;
+
+if(q)itens=itens.filter(p=>p.nome.toLowerCase().includes(q));
+
+lista.innerHTML=itens.map(p=>{
+const pr=getPriceObj(p.id,p.defKz,p.defEur);
+const persKz=Math.round(pr.kz*(1+perc/100));
+const persEur=(pr.eur*(1+perc/100)).toFixed(2);
+const isEquip=tab==='equip';
+
+return `<div class="card">
+<b>${p.nome}<small> ${p.id}</small></b>
+
+<div>
+<label>KZ</label>
+<input id="kz_${p.id}" type="number" value="${pr.kz}" oninput="livePers('${p.id}')">
+</div>
+
+<div>
+<label>EUR</label>
+<input id="eur_${p.id}" type="number" value="${pr.eur}" oninput="livePers('${p.id}')">
+</div>
+
+<div>
+<label>&nbsp;</label>
+<button class="btn" onclick="save('${p.id}')">Salvar</button>
+</div>
+
+${isEquip?`
+<div class="pers">
+<span>Personalizada (+${perc}%):</span>
+<strong id="pers_${p.id}">${persKz.toLocaleString('pt-PT')} Kz / €${persEur}</strong>
+</div>`:`
+<div class="pers">
+<span>Perfume</span>
+<strong>—</strong>
+</div>`}
+</div>`;
+}).join('');
 }
 
 function livePers(id){
- const kz=Number(document.getElementById('kz_'+id)?.value)||0;
- const eur=Number(document.getElementById('eur_'+id)?.value)||0;
- const el=document.getElementById('pers_'+id);
- if(el) el.innerText=`${Math.round(kz*(1+perc/100)).toLocaleString('pt-PT')} Kz / €${(eur*(1+perc/100)).toFixed(2)}`;
+const kz=Number(document.getElementById('kz_'+id)?.value)||0;
+const eur=Number(document.getElementById('eur_'+id)?.value)||0;
+const el=document.getElementById('pers_'+id);
+
+if(el){
+el.innerText=`${Math.round(kz*(1+perc/100)).toLocaleString('pt-PT')} Kz / €${(eur*(1+perc/100)).toFixed(2)}`;
+}
 }
 
 function save(id){
- const kz=Number(document.getElementById('kz_'+id).value);
- const eur=Number(document.getElementById('eur_'+id).value);
- // SÓ PREÇO
- db.ref('produtos/'+id).set({precoKz:kz,precoEUR:eur}).then(()=>{
-  dados[id]={precoKz:kz,precoEUR:eur};
-  const btn=document.querySelector(`button[onclick="save('${id}')"]`);
-  const old=btn.innerText; btn.innerText='✓ Salvo'; setTimeout(()=>btn.innerText=old,1500);
- });
+const kz=Number(document.getElementById('kz_'+id).value);
+const eur=Number(document.getElementById('eur_'+id).value);
+
+db.ref('produtos/'+id).set({
+precoKz:kz,
+precoEUR:eur
+}).then(()=>{
+dados[id]={precoKz:kz,precoEUR:eur};
+
+const btn=document.querySelector(`button[onclick="save('${id}')"]`);
+const old=btn.innerText;
+btn.innerText='✓ Salvo';
+setTimeout(()=>btn.innerText=old,1500);
+});
 }
 
 function saveCfg(){
- const p=Number(cfgPerc.value);
- db.ref('config').update({personalizadoPercent:p}).then(()=>{alert(`Percentagem salva: +${p}% . O site principal já vai calcular personalizada = normal + ${p}%`);});
+const p=Number(cfgPerc.value);
+
+db.ref('config').update({
+personalizadoPercent:p
+}).then(()=>{
+alert(`Percentagem salva: +${p}% . O site principal já vai calcular personalizada = normal + ${p}%`);
+});
 }
-</script></body></html> 
+
+/* ENCOMENDAS */
+
+function listenOrders(){
+
+if(ordersRef){
+ordersRef.off();
+}
+
+ordersRef=db.ref('encomendas');
+
+ordersRef.on('value',snapshot=>{
+encomendas=snapshot.val()||{};
+renderOrders();
+},error=>{
+ordersArea.innerHTML=
+`<div class="empty-orders">Não foi possível carregar as encomendas: ${escapeHTML(error.message)}</div>`;
+});
+
+}
+
+function escapeHTML(value){
+return String(value??'').replace(/[&<>"']/g,char=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[char]));
+}
+
+function formatDate(value){
+
+if(!value)return 'Data não disponível';
+
+const date=new Date(value);
+
+if(isNaN(date.getTime()))return 'Data não disponível';
+
+return date.toLocaleString('pt-PT',{
+day:'2-digit',
+month:'2-digit',
+year:'numeric',
+hour:'2-digit',
+minute:'2-digit'
+});
+
+}
+
+function renderOrders(){
+
+const entries=Object.entries(encomendas||{});
+
+entries.sort((a,b)=>{
+return Number(b[1]?.data||0)-Number(a[1]?.data||0);
+});
+
+orderCount.innerText=entries.length;
+
+if(!entries.length){
+ordersArea.innerHTML=
+'<div class="empty-orders">Ainda não existem encomendas.</div>';
+return;
+}
+
+ordersArea.innerHTML=entries.map(([id,o])=>{
+
+const cliente=o.cliente||{};
+const produtos=Array.isArray(o.produtos)?o.produtos:Object.values(o.produtos||{});
+
+const produtosHTML=produtos.map(p=>{
+
+const nome=escapeHTML(p.nome||p.produto||'Produto');
+const quantidade=Number(p.quantity??p.quantidade??1);
+const tamanho=escapeHTML(p.size||p.tamanho||'Não indicado');
+const preco=Number(p.lineTotal??p.total??0);
+
+return `
+<div class="order-product">
+<strong>${nome}</strong><br>
+Quantidade: ${quantidade}<br>
+Tamanho: ${tamanho}<br>
+Subtotal: ${preco.toLocaleString('pt-PT')} ${escapeHTML(o.moeda||'')}
+</div>`;
+
+}).join('');
+
+const total=Number(o.total||0);
+const moeda=escapeHTML(o.moeda||'');
+const estado=o.estado||'Pendente';
+
+return `
+<div class="order">
+
+<div class="order-head">
+<div>
+<div class="order-number">Encomenda ${escapeHTML(o.numero||id)}</div>
+<div class="order-date">${formatDate(o.data)}</div>
+</div>
+<strong style="font-size:11px;color:#2f6eae">${escapeHTML(estado)}</strong>
+</div>
+
+<div class="order-section">
+<h4>Dados do cliente</h4>
+<div class="order-info">
+<strong>Nome:</strong> ${escapeHTML(cliente.nome)}<br>
+<strong>Telefone:</strong> ${escapeHTML(cliente.telefone)}<br>
+<strong>Morada:</strong> ${escapeHTML(cliente.morada)}<br>
+<strong>Rua:</strong> ${escapeHTML(cliente.rua)}<br>
+<strong>Caixa postal:</strong> ${escapeHTML(cliente.caixaPostal)}
+</div>
+</div>
+
+<div class="order-section">
+<h4>Produtos encomendados</h4>
+<div class="order-products">
+${produtosHTML||'<div class="order-product">Sem produtos registados.</div>'}
+</div>
+</div>
+
+<div class="order-section">
+<h4>Total da encomenda</h4>
+<div class="order-total">${total.toLocaleString('pt-PT')} ${moeda}</div>
+</div>
+
+<div class="order-section">
+<h4>Estado da encomenda</h4>
+
+<select class="order-status" onchange="changeOrderStatus('${id}',this.value)">
+<option value="Pendente" ${estado==='Pendente'?'selected':''}>Pendente</option>
+<option value="Confirmada" ${estado==='Confirmada'?'selected':''}>Confirmada</option>
+<option value="Em preparação" ${estado==='Em preparação'?'selected':''}>Em preparação</option>
+<option value="Enviada" ${estado==='Enviada'?'selected':''}>Enviada</option>
+<option value="Concluída" ${estado==='Concluída'?'selected':''}>Concluída</option>
+<option value="Cancelada" ${estado==='Cancelada'?'selected':''}>Cancelada</option>
+</select>
+
+</div>
+
+</div>`;
+
+}).join('');
+
+}
+
+function changeOrderStatus(id,estado){
+
+db.ref('encomendas/'+id).update({
+estado:estado
+}).then(()=>{
+console.log('Estado da encomenda atualizado.');
+}).catch(error=>{
+alert('Não foi possível atualizar o estado: '+error.message);
+});
+
+}
+
+</script>
+</body>
+</html>
