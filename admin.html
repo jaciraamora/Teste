@@ -51,6 +51,46 @@ body{font-family:Inter,Arial;background:#f6f8fb;margin:0;color:#1a2b40}
 .card{grid-template-columns:1fr 1fr}
 .card b{grid-column:1/-1}
 }
+
+/* SEPARADORES DAS ENCOMENDAS */
+
+.order-filters {
+    display: flex;
+    gap: 7px;
+    padding: 4px 0 12px;
+    overflow-x: auto;
+}
+
+.order-filter {
+    flex: 1;
+    min-width: max-content;
+    padding: 11px 9px;
+    border: 1px solid #d9e3f0;
+    border-radius: 10px;
+    background: #fff;
+    color: #4a6a8a;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.order-filter.active {
+    background: #2f6eae;
+    color: white;
+    border-color: #2f6eae;
+}
+
+.order-delete {
+    width: 100%;
+    margin-top: 10px;
+    background: #fff1f1;
+    color: #c34b4b;
+    border: 1px solid #f3d4d4;
+}
+
+.order-delete:hover {
+    background: #ffe5e5;
+}
 </style>
 </head>
 
@@ -158,6 +198,7 @@ let dados={};
 let perc=25;
 let encomendas={};
 let ordersRef=null;
+let orderFilter='Pendente';
 
 function login(){
 auth.signInWithEmailAndPassword(email.value,pass.value)
@@ -382,16 +423,70 @@ return Number(b[1]?.data||0)-Number(a[1]?.data||0);
 
 orderCount.innerText=entries.length;
 
-if(!entries.length){
-ordersArea.innerHTML=
-'<div class="empty-orders">Ainda não existem encomendas.</div>';
-return;
+function getStatus(o){
+    const estado=o.estado||'Pendente';
+
+    if(estado==='Confirmada') return 'Em preparação';
+
+    if(['Pendente','Em preparação','Enviada'].includes(estado)){
+        return estado;
+    }
+
+    return 'Pendente';
 }
 
-ordersArea.innerHTML=entries.map(([id,o])=>{
+const counts={
+    'Pendente':0,
+    'Em preparação':0,
+    'Enviada':0
+};
+
+entries.forEach(([id,o])=>{
+    counts[getStatus(o)]++;
+});
+
+const filters=`
+<div class="order-filters">
+
+    <button class="order-filter ${orderFilter==='Pendente'?'active':''}"
+    onclick="setOrderFilter('Pendente')">
+        Pendentes (${counts['Pendente']})
+    </button>
+
+    <button class="order-filter ${orderFilter==='Em preparação'?'active':''}"
+    onclick="setOrderFilter('Em preparação')">
+        Em preparação (${counts['Em preparação']})
+    </button>
+
+    <button class="order-filter ${orderFilter==='Enviada'?'active':''}"
+    onclick="setOrderFilter('Enviada')">
+        Enviadas (${counts['Enviada']})
+    </button>
+
+</div>`;
+
+const filtered=entries.filter(([id,o])=>{
+    return getStatus(o)===orderFilter;
+});
+
+if(!entries.length){
+    ordersArea.innerHTML=filters+
+    '<div class="empty-orders">Ainda não existem encomendas.</div>';
+    return;
+}
+
+if(!filtered.length){
+    ordersArea.innerHTML=filters+
+    `<div class="empty-orders">Não existem encomendas ${orderFilter.toLowerCase()}.</div>`;
+    return;
+}
+
+const cards=filtered.map(([id,o])=>{
 
 const cliente=o.cliente||{};
-const produtos=Array.isArray(o.produtos)?o.produtos:Object.values(o.produtos||{});
+
+const produtos=Array.isArray(o.produtos)
+?o.produtos:Object.values(o.produtos||{});
 
 const produtosHTML=produtos.map(p=>{
 
@@ -412,7 +507,7 @@ Subtotal: ${preco.toLocaleString('pt-PT')} ${escapeHTML(o.moeda||'')}
 
 const total=Number(o.total||0);
 const moeda=escapeHTML(o.moeda||'');
-const estado=o.estado||'Pendente';
+const estado=getStatus(o);
 
 return `
 <div class="order">
@@ -452,13 +547,19 @@ ${produtosHTML||'<div class="order-product">Sem produtos registados.</div>'}
 <h4>Estado da encomenda</h4>
 
 <select class="order-status" onchange="changeOrderStatus('${id}',this.value)">
+
 <option value="Pendente" ${estado==='Pendente'?'selected':''}>Pendente</option>
-<option value="Confirmada" ${estado==='Confirmada'?'selected':''}>Confirmada</option>
+
 <option value="Em preparação" ${estado==='Em preparação'?'selected':''}>Em preparação</option>
+
 <option value="Enviada" ${estado==='Enviada'?'selected':''}>Enviada</option>
-<option value="Concluída" ${estado==='Concluída'?'selected':''}>Concluída</option>
-<option value="Cancelada" ${estado==='Cancelada'?'selected':''}>Cancelada</option>
+
 </select>
+
+${estado==='Enviada'?`
+<button class="btn order-delete" onclick="deleteOrder('${id}')">
+Eliminar encomenda
+</button>`:''}
 
 </div>
 
@@ -466,16 +567,67 @@ ${produtosHTML||'<div class="order-product">Sem produtos registados.</div>'}
 
 }).join('');
 
+ordersArea.innerHTML=filters+cards;
+
+}
+
+function setOrderFilter(estado){
+
+orderFilter=estado;
+renderOrders();
+
+}
+
+/* ELIMINAR ENCOMENDA ENVIADA */
+
+async function deleteOrder(id){
+
+if(!confirm('Tens a certeza de que pretendes eliminar esta encomenda?')){
+    return;
+}
+
+try{
+
+    const ref=db.ref('encomendas/'+id);
+
+    const snapshot=await ref.once('value');
+
+    const encomenda=snapshot.val();
+
+    if(!encomenda){
+        alert('Esta encomenda já não existe.');
+        return;
+    }
+
+    if(encomenda.estado!=='Enviada'){
+        alert('Só podes eliminar encomendas enviadas.');
+        return;
+    }
+
+    await ref.remove();
+
+}catch(error){
+
+    console.error('Erro ao eliminar encomenda:',error);
+
+    alert('Não foi possível eliminar a encomenda.');
+
+}
+
 }
 
 function changeOrderStatus(id,estado){
 
+if(!['Pendente','Em preparação','Enviada'].includes(estado)){
+    return;
+}
+
 db.ref('encomendas/'+id).update({
-estado:estado
+    estado:estado
 }).then(()=>{
-console.log('Estado da encomenda atualizado.');
+    console.log('Estado da encomenda atualizado.');
 }).catch(error=>{
-alert('Não foi possível atualizar o estado: '+error.message);
+    alert('Não foi possível atualizar o estado: '+error.message);
 });
 
 }
