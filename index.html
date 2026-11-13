@@ -4,12 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta property="og:title" content="Orkap | Loja Online">
+
+<meta property="og:description" content="Descobre os nossos produtos e faz a tua encomenda online.">
+
+<meta property="og:image" content="https://orkap.vercel.app/previ.jpg"> 
+
+<meta property="og:url" content="https://orkap.vercel.app/">
+
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+
 <title>Orkap | A tua loja online</title>
 <meta name="description" content="Descobre equipamentos desportivos e perfumes de várias marcas na Orkap. Compras online, por encomenda.">
 
 <style>
 :root {
-    --azul: #527fae;
+    --azul: #1E36B8;
     --azul-claro: #eaf2fa;
     --azul-suave: #f4f8fc;
     --branco: #ffffff;
@@ -31,8 +43,8 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: var(--branco);
+    font-family: DM Serif Display, sans-serif;
+    background: var(--azul-suave);
     color: var(--texto);
 }
 
@@ -92,10 +104,12 @@ header {
 }
 
 .brand-name {
-    font-size: 25px;
-    font-weight: 800;
+    font-size: 22px !important;
+    
     color: var(--azul);
     letter-spacing: -.8px;
+    font-family: Yeseva One !important;
+    
 }
 
 .brand small {
@@ -162,7 +176,12 @@ nav a:hover {
 /* APRESENTAÇÃO */
 
 .hero {
-    background: var(--azul-suave);
+    background: linear-gradient(
+    135deg,
+    rgba(12, 30, 130, .97),
+    rgba(30, 55, 190, .90),
+    rgba(120, 155, 255, .85)
+);
     padding: 55px 5%;
 }
 
@@ -184,6 +203,7 @@ nav a:hover {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 20px;
+	
 }
 
 .hero h1 {
@@ -191,14 +211,17 @@ nav a:hover {
     line-height: 1.12;
     margin-bottom: 20px;
     letter-spacing: -1.5px;
+	color: #ffffff;
+	font-family: Yeseva One !important;
 }
 
 .hero h1 span {
-    color: var(--azul);
+    color: #ffffff;
+	font-family: Yeseva One !important;
 }
 
 .hero p {
-    color: var(--cinza);
+    color: #ffffff;
     line-height: 1.8;
     max-width: 470px;
     font-size: 15px;
@@ -222,13 +245,13 @@ nav a:hover {
 }
 
 .primary-button {
-    background: var(--azul);
+    background: #000000;
     color: white;
 }
 
 .secondary-button {
-    color: var(--azul);
-    background: white;
+    color: #ffffff;
+    background:#000000;
 }
 
 .hero-image {
@@ -769,18 +792,31 @@ nav a:hover {
     z-index: 201;
     right: 0;
     top: 0;
-    height: 100%;
-    width: min(430px, 100%);
+    height: 100dvh;
+    width: min(600px, 100%);
     background: white;
     padding: 23px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
     transform: translateX(100%);
     transition: transform .3s;
 }
 
 .cart-panel.open {
     transform: translateX(0);
+}
+
+.cart-items {
+    flex: 0 0 auto;
+    overflow: visible;
+}
+
+.cart-footer {
+    flex-shrink: 0;
 }
 
 .cart-header {
@@ -803,11 +839,7 @@ nav a:hover {
     padding: 9px 12px;
 }
 
-.cart-items {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px 0;
-}
+
 
 .cart-item {
     display: grid;
@@ -953,6 +985,8 @@ footer {
     color: var(--cinza);
     font-size: 11px;
     line-height: 1.8;
+	background: #ffffff;
+	
 }
 
 /* TELEMÓVEL */
@@ -1214,7 +1248,7 @@ footer {
             <img src="perfil.png" alt="Orkap" class="profile-photo">
 
             <div>
-                <div class="brand-name">Novo Conveito De Shopping</div>
+                <div class="brand-name">Orkap </div>
                 <small>A TUA LOJA ONLINE</small>
             </div>
         </a>
@@ -1247,17 +1281,16 @@ footer {
     <div class="hero-content">
 
         <div>
-            <span class="hero-label">A tua próxima escolha está aqui</span>
-
+          
             <h1>
-                Os teus favoritos.<br>
-                <span>À tua maneira.</span>
+                NOVO CONCEITO <br>
+                <span>DE SHOPPING</span>
             </h1>
 
             <p>
                 Descobre equipamentos dos teus clubes favoritos
                 e perfumes de várias marcas. Escolhe os teus produtos
-                e encomenda sem sair de casa.
+                e encomende sem sair de casa.
             </p>
 
             <div class="hero-buttons">
@@ -1271,33 +1304,7 @@ footer {
     </div>
 </section>
 
-<section class="benefits">
 
-    <div class="benefit">
-        <span class="benefit-icon">⚽</span>
-        <div>
-            <strong>Os teus clubes favoritos</strong>
-            <small>Equipamentos de vários clubes</small>
-        </div>
-    </div>
-
-    <div class="benefit">
-        <span class="benefit-icon">🌸</span>
-        <div>
-            <strong>Perfumes de várias marcas</strong>
-            <small>Escolhe a fragrância ideal</small>
-        </div>
-    </div>
-
-    <div class="benefit">
-        <span class="benefit-icon">📦</span>
-        <div>
-            <strong>Encomenda online</strong>
-            <small>Compra com um processo simples</small>
-        </div>
-    </div>
-
-</section>
 
 <!-- EQUIPAMENTOS E ESCOLHA DE CLUBES -->
 
@@ -1308,28 +1315,24 @@ footer {
             <div>
                 <div class="section-tag">Paixão pelo futebol</div>
                 <h2>Encontra o teu clube</h2>
-                <p>Escolhe o país, o clube e o tipo de equipamento que pretendes encomendar.</p>
+                <p>Escolhe o país, o clube e o tipo de equipamento que pretende encomendar.</p>
             </div>
         </div>
 
         <div class="club-finder">
 
-            <p>
-                Seleciona o país, escolhe o teu clube e indica o tipo de equipamento
-                que pretendes encomendar.
-            </p>
 
             <div class="finder-fields">
 
                 <select id="clubCountry" class="form-control"
                         onchange="updateClubOptions()">
-                    <option value="Espanha">Espanha</option>
-                    <option value="Inglaterra">Inglaterra</option>
                     <option value="Alemanha">Alemanha</option>
-                    <option value="França">França</option>
-                    <option value="Itália">Itália</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="Brasil">Brasil</option>
+<option value="Brasil">Brasil</option>
+<option value="Espanha">Espanha</option>
+<option value="França">França</option>
+<option value="Inglaterra">Inglaterra</option>
+<option value="Itália">Itália</option>
+<option value="Portugal">Portugal</option>
                 </select>
 
                 <select id="clubChoice" class="form-control">
@@ -1345,17 +1348,14 @@ footer {
             </div>
 
             <p class="finder-note" id="customPrice">
-                Preço de referência: 52.000 Kz / 40 €
+                Preço de referência: 40 € / 52.000 Kz
             </p>
 
             <button class="finder-button" onclick="addSelectedClub()">
                 + Adicionar referência ao carrinho
             </button>
 
-            <p class="finder-note">
-                Os preços apresentados são referências. Modelo, época, tamanho
-                e disponibilidade serão confirmados pelo WhatsApp.
-            </p>
+         
 
         </div>
 
@@ -1402,12 +1402,12 @@ footer {
 
             <div>
                 <div class="section-tag">Simples e transparente</div>
-                <h2>Como funciona a tua encomenda?</h2>
+                <h2>Como encomendar?</h2>
 
                 <p>
                     Escolhe os produtos, adiciona-os ao carrinho e envia
-                    o teu pedido pelo WhatsApp. As encomendas são realizadas
-                    por encomenda.
+                    o teu pedido pelo WhatsApp.
+                    
                 </p>
 
                 <br>
@@ -1543,9 +1543,9 @@ footer {
 
       
 
-        <button class="checkout-button" onclick="checkout()">
-            Encomendar pelo WhatsApp
-        </button>
+       <button class="checkout-button" onclick="checkout()">
+    Finalizar encomenda
+</button>
 
         <p class="cart-note">
             Os preços são valores de referência. A encomenda e as condições
@@ -1572,13 +1572,13 @@ footer {
     <img data-produto="psg-demo" src="psg.jpg" alt="">
 
  <img data-produto="bayern-demo" src="bay.jpg" alt="">
-    <img data-produto="city-demo" src="city.jpg" alt="">
+    <img data-produto="city-demo" src="ci.jpg" alt="">
    
 
 
+ 
 
-
-  <img data-produto="porto-demo" src="por.jpg" alt="">
+  <img data-produto="porto-demo" src="porto.jpg" alt="">
     <img data-produto="milan-demo" src="mil.jpg" alt="">
     <img data-produto="juventus-demo" src="juve.jpg" alt="">
     <img data-produto="inter-demo" src="inter.jpg" alt="">
@@ -1607,7 +1607,7 @@ footer {
          alt="">
 
     <img data-produto="sauvage-demo"
-         src="Sau.jpg"
+         src="sau.jpg"
          alt="">
 
     <img data-produto="ysl-demo"
@@ -1615,7 +1615,7 @@ footer {
          alt="">
 
     <img data-produto="dolce-demo"
-         src="dolce-gabbana"
+         src="dolce-gabbaba.jpg"
          alt="">
 
     <img data-produto="zara-demo"
@@ -2479,7 +2479,7 @@ function addSelectedClub() {
         descricao: "Confirmar época, modelo, tamanho e disponibilidade.",
         precoKz: equipmentBaseKz * multiplier,
         precoEUR: equipmentBaseEUR * multiplier,
-        imagem: "",
+        imagem: products.find(p => p.marca === club)?.imagem || "",
         ativo: true,
         personalizado: type === "personalizado"
     };
@@ -2511,17 +2511,32 @@ document.getElementById("currency").addEventListener("change", function() {
 /* CARRINHO */
 
 function addToCart(productId, ageGroup = "", size = "", quantity = 1) {
-
     const product = products.find(p =>
         String(p.id) === String(productId)
     );
 
     if (!product) return;
 
+    const isCustom = String(productId).startsWith("custom-");
+    const equipmentType = isCustom
+        ? (product.personalizado ? "personalizado" :
+           product.tipoEquipamento === "Equipamento de treino"
+               ? "treino" : "normal")
+        : "normal";
+
+    const percent = equipmentType === "personalizado"
+        ? personalizadoPercent : 0;
+
+    const multiplier = 1 + percent / 100;
+
+    const priceKz = (Number(product.precoKz) || 0) * multiplier;
+    const priceEUR = (Number(product.precoEUR) || 0) * multiplier;
+
     const existing = cart.find(item =>
         String(item.id) === String(productId) &&
         (item.ageGroup || "") === ageGroup &&
-        (item.size || "") === size
+        (item.size || "") === size &&
+        (item.equipmentType || "normal") === equipmentType
     );
 
     if (existing) {
@@ -2529,68 +2544,71 @@ function addToCart(productId, ageGroup = "", size = "", quantity = 1) {
     } else {
         cart.push({
             id: product.id,
-            quantity: quantity,
-            ageGroup: ageGroup,
-            size: size
+            quantity,
+            ageGroup,
+            size,
+            equipmentType,
+            personalizadoPercent: percent,
+            priceKz,
+            priceEUR
         });
     }
 
     updateCart();
     openCart();
 }
-
-function changeQuantity(productId, amount, ageGroup = "", size = "") {
-
-    const item = cart.find(item =>
-        String(item.id) === String(productId) &&
-        (item.ageGroup || "") === ageGroup &&
-        (item.size || "") === size
+function changeQuantity(productId, delta, ageGroup = "", size = "", equipmentType = "normal") {
+    const item = cart.find(i => 
+        String(i.id) === String(productId) && 
+        (i.ageGroup || "") === ageGroup && 
+        (i.size || "") === size &&
+        (i.equipmentType || "normal") === equipmentType
     );
-
     if (!item) return;
-
-    item.quantity += amount;
-
+    
+    item.quantity += delta;
+    
     if (item.quantity <= 0) {
-        cart = cart.filter(cartItem => !(
-            String(cartItem.id) === String(productId) &&
-            (cartItem.ageGroup || "") === ageGroup &&
-            (cartItem.size || "") === size
-        ));
+        removeFromCart(productId, ageGroup, size, equipmentType);
+    } else {
+        updateCart();
+        saveCart();
     }
-
-    updateCart();
 }
 
-function removeFromCart(productId, ageGroup = "", size = "") {
-
-    cart = cart.filter(item => !(
-        String(item.id) === String(productId) &&
-        (item.ageGroup || "") === ageGroup &&
-        (item.size || "") === size
-    ));
-
+function removeFromCart(productId, ageGroup = "", size = "", equipmentType = "normal") {
+    cart = cart.filter(i => 
+        !(String(i.id) === String(productId) && 
+        (i.ageGroup || "") === ageGroup && 
+        (i.size || "") === size &&
+        (i.equipmentType || "normal") === equipmentType)
+    );
     updateCart();
+    saveCart();
 }
 
 function getCartDetails() {
-
     return cart.map(item => {
-
         const product = products.find(p =>
             String(p.id) === String(item.id)
         );
 
         if (!product) return null;
 
+        const unitPrice = currentCurrency === "EUR"
+            ? Number(item.priceEUR ?? product.precoEUR) || 0
+            : Number(item.priceKz ?? product.precoKz) || 0;
+
         return {
             ...product,
             ageGroup: item.ageGroup || "",
             size: item.size || "",
             quantity: item.quantity,
-            lineTotal: getPrice(product) * item.quantity
+            equipmentType: item.equipmentType || "normal",
+            personalizadoPercent: item.personalizadoPercent || 0,
+            unitPrice,
+            lineTotal: unitPrice * item.quantity
         };
-
     }).filter(Boolean);
 }
 
@@ -2609,18 +2627,13 @@ function updateCart() {
     const deposit = total;
 
     document.getElementById("cartCount").textContent = count;
-
-    document.getElementById("cartSubtotal").textContent =
-        formatMoney(total);
-
-    document.getElementById("cartTotal").textContent =
-        formatMoney(total);
-
-    document.getElementById("cartDeposit").textContent =
-        formatMoney(deposit);
-
-    document.getElementById("cartRemaining").textContent =
-        formatMoney(remaining);
+    document.getElementById("cartTotal").textContent = formatMoney(total);
+    document.getElementById("cartDeposit").textContent = formatMoney(deposit);
+    
+    const remainingEl = document.getElementById("cartRemaining");
+    if(remainingEl) {
+        remainingEl.textContent = formatMoney(0);
+    }
 
     const cartItems = document.getElementById("cartItems");
 
@@ -2635,51 +2648,52 @@ function updateCart() {
         return;
     }
 
-    cartItems.innerHTML = items.map(item => `
+    cartItems.innerHTML = items.map(item => {
 
+        let equipamentoLabel = "";
+        if(item.equipmentType === "personalizado"){
+            equipamentoLabel = `Personalizada (+${item.personalizadoPercent || personalizadoPercent}%)`;
+        } else if(item.equipmentType === "treino"){
+            equipamentoLabel = `Equipamento de treino`;
+        } else {
+            equipamentoLabel = `Equipamento normal`;
+        }
+
+        return `
         <div class="cart-item">
-
             <img src="${safeImage(item.imagem)}" alt="${item.nome}">
-
             <div>
                 <h4>${item.nome}</h4>
-
+                <div style="font-size:11px;margin-bottom:5px; font-weight:600; color:#d32f2f;">
+                    ${equipamentoLabel}
+                </div>
                 ${item.ageGroup ? `
                     <div style="font-size:11px;margin-bottom:5px">
                         Categoria: ${item.ageGroup}
                     </div>
                 ` : ""}
-
                 ${item.size ? `
                     <div style="font-size:11px;margin-bottom:7px">
                         Tamanho: ${item.size}
                     </div>
                 ` : ""}
-
                 <div class="cart-item-price">
-                    ${formatMoney(item.lineTotal)}
+                    ${formatMoney(item.lineTotal)} ${item.equipmentType === 'personalizado' ? `<small style="font-size:10px">(${formatMoney(item.unitPrice)} un.)</small>` : ''}
                 </div>
-
                 <div class="quantity-controls">
-
-                    <button onclick="changeQuantity('${item.id}', -1, '${item.ageGroup}', '${item.size}')">−</button>
-
+                    <button onclick="changeQuantity('${item.id}', -1, '${item.ageGroup}', '${item.size}', '${item.equipmentType || 'normal'}')">−</button>
                     <span>${item.quantity}</span>
-
-                    <button onclick="changeQuantity('${item.id}', 1, '${item.ageGroup}', '${item.size}')">+</button>
-
+                    <button onclick="changeQuantity('${item.id}', 1, '${item.ageGroup}', '${item.size}', '${item.equipmentType || 'normal'}')">+</button>
                     <button class="remove-item"
-                        onclick="removeFromCart('${item.id}', '${item.ageGroup}', '${item.size}')"
+                        onclick="removeFromCart('${item.id}', '${item.ageGroup}', '${item.size}', '${item.equipmentType || 'normal'}')"
                         aria-label="Remover produto">
                         Remover
                     </button>
-
                 </div>
             </div>
-
         </div>
-
-    `).join("");
+        `;
+    }).join("");
 }
 
 /* ABRIR E FECHAR CARRINHO */
@@ -2696,14 +2710,19 @@ function closeCart() {
     document.body.style.overflow = "";
 }
 
-/* ENCOMENDAR PELO WHATSAPP */
+/* REGISTAR ENCOMENDA NO FIREBASE */
 
-function checkout() {
+async function checkout() {
 
     const items = getCartDetails();
 
     if (!items.length) {
         alert("Adiciona primeiro os produtos ao carrinho.");
+        return;
+    }
+
+    if (!database) {
+        alert("Não foi possível estabelecer ligação à loja. Tenta novamente.");
         return;
     }
 
@@ -2722,54 +2741,91 @@ function checkout() {
     const total = items.reduce(
         (sum, item) => sum + item.lineTotal, 0
     );
-      const deposit = total;
 
-    let message = "Olá Orkap! Gostaria de fazer uma encomenda.\n\n";
+    const checkoutButton = document.querySelector(".checkout-button");
+    const originalText = checkoutButton.innerText;
 
-    message += "*DADOS DO CLIENTE*\n";
-    message += "Nome: " + customerName + "\n";
-    message += "Morada: " + customerAddress + "\n";
-    message += "Rua/bairro: " + customerStreet + "\n";
-    message += "Caixa postal: " + (customerPostal || "Não indicada") + "\n";
-    message += "Telefone/WhatsApp: " + customerPhone + "\n\n";
+    checkoutButton.disabled = true;
+    checkoutButton.innerText = "A registar encomenda...";
 
-    message += "*PRODUTOS*\n";
+    const produtos = items.map(item => ({
+        id: item.id,
+        nome: item.nome,
+        marca: item.marca || "",
+        categoria: item.categoria || "",
+        pais: item.pais || "",
+        tipoEquipamento: item.tipoEquipamento || "",
+        equipmentType: item.equipmentType || "normal",
+        ageGroup: item.ageGroup || "",
+        size: item.size || "",
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        lineTotal: item.lineTotal,
+        personalizadoPercent: item.personalizadoPercent || 0
+    }));
 
-    items.forEach(item => {
+    const encomendaRef = database.ref("encomendas").push();
 
-        message += "• " + item.nome +
-            "\n  Quantidade: " + item.quantity +
-            "\n  Preço: " + formatMoney(item.lineTotal) + "\n";
+    const encomenda = {
+        numero: encomendaRef.key,
 
-        if (item.ageGroup) {
-            message += "  Categoria: " + item.ageGroup + "\n";
-        }
+        cliente: {
+            nome: customerName,
+            morada: customerAddress,
+            rua: customerStreet,
+            caixaPostal: customerPostal || "Não indicada",
+            telefone: customerPhone
+        },
 
-        if (item.size) {
-            message += "  Tamanho: " + item.size + "\n";
-        }
+        produtos: produtos,
 
-        if (item.pais) {
-            message += "  País: " + item.pais + "\n";
-        }
+        moeda: currentCurrency,
+        total: total,
 
-        if (item.tipoEquipamento) {
-            message += "  Tipo: " + item.tipoEquipamento + "\n";
-        }
-    });
+        pagamento: {
+            tipo: "Integral",
+            percentagem: 100,
+            valor: total
+        },
 
-    message += "\n*RESUMO DO PAGAMENTO*\n";
-    message += "Moeda: " + currentCurrency + "\n";
-    message += "Total: " + formatMoney(total) + "\n";
-    message += "Pagamento integral (100%): " + formatMoney(deposit) + "\n\n";
+        estado: "Pendente",
 
-    message += "*Entrega:* prazo previsto de até 7 dias, sujeito a confirmação.\n";
-    message += "Por favor, confirmem a disponibilidade, os modelos, o prazo e as condições de pagamento antes de eu efetuar o pagamento.";
+        data: firebase.database.ServerValue.TIMESTAMP
+    };
 
-    const url = "https://wa.me/" + WHATSAPP +
-        "?text=" + encodeURIComponent(message);
+    try {
 
-    window.open(url, "_blank");
+        await encomendaRef.set(encomenda);
+
+        alert(
+            "A tua encomenda foi registada com sucesso!\n\n" +
+            "Número da encomenda: " + encomenda.numero +
+            "\n\nA Orkap entrará em contacto contigo."
+        );
+
+        cart = [];
+        saveCart();
+        updateCart();
+
+        form.reset();
+
+        closeCart();
+
+    } catch (error) {
+
+        console.error("Erro ao registar encomenda:", error);
+
+        alert(
+            "Não foi possível registar a encomenda. " +
+            "Tenta novamente."
+        );
+
+    } finally {
+
+        checkoutButton.disabled = false;
+        checkoutButton.innerText = originalText;
+
+    }
 }
 
 function contactWhatsApp() {
