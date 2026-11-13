@@ -1232,6 +1232,125 @@ footer {
         height: 120px;
     }
 }
+
+/* BOTÃO DISCRETO DO MENU */
+
+.orkap-menu-button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: .2s;
+}
+
+.orkap-menu-button:hover {
+    background: #f3f5f8;
+}
+
+.orkap-menu-button span {
+    width: 16px;
+    height: 1.5px;
+    background: #64748b;
+    border-radius: 3px;
+}
+
+/* FUNDO DO MENU */
+
+.orkap-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .25);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+}
+
+/* MENU LATERAL */
+
+.orkap-side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 270px;
+    max-width: 85%;
+    height: 100%;
+    background: white;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 0 25px rgba(0,0,0,.08);
+}
+
+.orkap-side-menu.active {
+    transform: translateX(0);
+}
+
+.orkap-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.orkap-menu-header {
+    height: 65px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--borda);
+    font-weight: 600;
+    color: var(--azul);
+}
+
+.orkap-menu-header button {
+    border: none;
+    background: none;
+    font-size: 26px;
+    color: #777;
+    cursor: pointer;
+}
+
+.orkap-menu-content {
+    padding: 20px 12px;
+    flex: 1;
+}
+
+.orkap-admin-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: 7px;
+    color: #475569;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.orkap-admin-link:hover {
+    background: #f1f5f9;
+    color: var(--azul);
+}
+
+.orkap-admin-link span {
+    font-size: 18px;
+}
+
+.orkap-menu-footer {
+    padding: 17px 20px;
+    border-top: 1px solid var(--borda);
+    font-size: 11px;
+    color: #999;
+}
+
 </style>
 </head>
 
@@ -1257,23 +1376,62 @@ footer {
             <a href="#inicio">Início</a>
             <a href="#equipamentos">Equipamentos</a>
             <a href="#perfumes">Perfumes</a>
-            <a href="#como-encomendar">Encomendas</a>
+            <a href="#como-encomendar">Como Encomendar</a>
             <a href="#contacto">Contacto</a>
         </nav>
 
         <div class="header-actions">
+
             <select id="currency" class="currency-select" aria-label="Selecionar moeda">
-				 <option value="EUR">€ EUR</option>
-				 <option value="Kz">Kz</option>
-          
+                <option value="EUR">€ EUR</option>
+                <option value="Kz">Kz</option>
             </select>
 
             <button class="cart-button" onclick="openCart()">
                 🛒 <span class="cart-count" id="cartCount">0</span>
             </button>
+
+            <!-- ACESSO DISCRETO AO MENU -->
+            <button class="orkap-menu-button"
+                    onclick="toggleOrkapMenu()"
+                    aria-label="Abrir menu"
+                    aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
         </div>
     </div>
 </header>
+
+<!-- MENU LATERAL -->
+<div class="orkap-menu-overlay" id="orkapOverlay" onclick="closeOrkapMenu()"></div>
+
+<aside class="orkap-side-menu" id="orkapSideMenu">
+
+    <div class="orkap-menu-header">
+        <span>Orkap Console</span>
+
+        <button onclick="closeOrkapMenu()" aria-label="Fechar menu">
+            &times;
+        </button>
+    </div>
+
+    <div class="orkap-menu-content">
+
+        <a href="admin.html" class="orkap-admin-link">
+            <span>↗</span>
+            Entrar
+        </a>
+
+    </div>
+
+    <div class="orkap-menu-footer">
+        Orkap · Área reservada
+    </div>
+
+</aside>
 
 <main>
 
@@ -2764,44 +2922,85 @@ async function checkout() {
         personalizadoPercent: item.personalizadoPercent || 0
     }));
 
-    const encomendaRef = database.ref("encomendas").push();
-
-    const encomenda = {
-        numero: encomendaRef.key,
-
-        cliente: {
-            nome: customerName,
-            morada: customerAddress,
-            rua: customerStreet,
-            caixaPostal: customerPostal || "Não indicada",
-            telefone: customerPhone
-        },
-
-        produtos: produtos,
-
-        moeda: currentCurrency,
-        total: total,
-
-        pagamento: {
-            tipo: "Integral",
-            percentagem: 100,
-            valor: total
-        },
-
-        estado: "Pendente",
-
-        data: firebase.database.ServerValue.TIMESTAMP
-    };
+    let numeroEncomenda;
 
     try {
 
+        // GERAR NÚMERO SEQUENCIAL
+
+        const contadorRef = database.ref("contadorEncomendas");
+
+        const resultado = await contadorRef.transaction(
+            numeroAtual => (numeroAtual || 0) + 1
+        );
+
+        if (!resultado.committed) {
+            throw new Error("Não foi possível gerar o número da encomenda.");
+        }
+
+        const numeroSequencial = resultado.snapshot.val();
+
+        numeroEncomenda = "ORK-" + numeroSequencial;
+
+        // REGISTAR ENCOMENDA
+
+        const encomendaRef = database.ref("encomendas").push();
+
+        const encomenda = {
+
+            numero: numeroEncomenda,
+
+            cliente: {
+                nome: customerName,
+                morada: customerAddress,
+                rua: customerStreet,
+                caixaPostal: customerPostal || "Não indicada",
+                telefone: customerPhone
+            },
+
+            produtos: produtos,
+
+            moeda: currentCurrency,
+            total: total,
+
+            pagamento: {
+                tipo: "Integral",
+                percentagem: 100,
+                valor: total
+            },
+
+            estado: "Pendente",
+
+            data: firebase.database.ServerValue.TIMESTAMP
+        };
+
         await encomendaRef.set(encomenda);
 
+    } catch (error) {
+
+        console.error("Erro ao registar encomenda:", error);
+
         alert(
-            "A tua encomenda foi registada com sucesso!\n\n" +
-            "Número da encomenda: " + encomenda.numero +
-            "\n\nA Orkap entrará em contacto contigo."
+            "Não foi possível registar a encomenda. Tenta novamente."
         );
+
+        checkoutButton.disabled = false;
+        checkoutButton.innerText = originalText;
+
+        return;
+    }
+
+    // CONFIRMAR REGISTO
+
+    alert(
+        "A tua encomenda foi registada com sucesso!\n\n" +
+        "Número da encomenda: " + numeroEncomenda +
+        "\n\nA Orkap entrará em contacto contigo."
+    );
+
+    // LIMPAR CARRINHO
+
+    try {
 
         cart = [];
         saveCart();
@@ -2813,19 +3012,13 @@ async function checkout() {
 
     } catch (error) {
 
-        console.error("Erro ao registar encomenda:", error);
-
-        alert(
-            "Não foi possível registar a encomenda. " +
-            "Tenta novamente."
-        );
-
-    } finally {
-
-        checkoutButton.disabled = false;
-        checkoutButton.innerText = originalText;
+        console.error("Erro ao limpar o carrinho:", error);
 
     }
+
+    checkoutButton.disabled = false;
+    checkoutButton.innerText = originalText;
+
 }
 
 function contactWhatsApp() {
@@ -2889,6 +3082,42 @@ if (database) {
 updateClubOptions();
 updateCustomPrice();
 renderProducts(); // <- ADICIONA ESTA LINHA
+
+/* MENU LATERAL ORKAP */
+
+function toggleOrkapMenu() {
+
+    const menu = document.getElementById("orkapSideMenu");
+    const overlay = document.getElementById("orkapOverlay");
+    const button = document.querySelector(".orkap-menu-button");
+
+    const abrir = !menu.classList.contains("active");
+
+    menu.classList.toggle("active", abrir);
+    overlay.classList.toggle("active", abrir);
+
+    button.setAttribute("aria-expanded", abrir);
+
+}
+
+function closeOrkapMenu() {
+
+    document.getElementById("orkapSideMenu").classList.remove("active");
+
+    document.getElementById("orkapOverlay").classList.remove("active");
+
+    document.querySelector(".orkap-menu-button")
+        .setAttribute("aria-expanded", "false");
+
+}
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeOrkapMenu();
+    }
+
+});
 
 </script>
 
